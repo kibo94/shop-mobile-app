@@ -238,7 +238,7 @@ app.post('/register', async (req, res) => {
 // }, app);
 
 // httpsServer.listen(port, (s) => console.log('port is live', port))
-server.use(middlewares);
+app.use(middlewares);
 
 
-server.listen(port);
+app.listen(port);
