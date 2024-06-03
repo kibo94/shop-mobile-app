@@ -9,7 +9,8 @@ import cors from "cors"
 
 // import serviceAccount from "path/to/key.json"
 const app = express()
-const middlewares = jsonServer.defaults();
+
+
 const port = process.env.PORT || 4000;
 console.log(1234);
 const users = [
@@ -238,7 +239,7 @@ app.post('/register', async (req, res) => {
 // }, app);
 
 // httpsServer.listen(port, (s) => console.log('port is live', port))
-app.use(middlewares);
+
 
 
 app.listen(port);
