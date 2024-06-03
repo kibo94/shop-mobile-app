@@ -9,7 +9,8 @@ import cors from "cors"
 
 // import serviceAccount from "path/to/key.json"
 const app = express()
-const port = 4000
+const middlewares = jsonServer.defaults();
+const port = process.env.PORT || 4000;
 console.log(1234);
 const users = [
     {
@@ -231,9 +232,13 @@ app.post('/register', async (req, res) => {
 })
 
 
-const httpsServer = https.createServer({
-    key: fs.readFileSync(path.join("cert", "key.pem")),
-    cert: fs.readFileSync(path.join("cert", "cert.pem"))
-}, app);
+// const httpsServer = https.createServer({
+//     key: fs.readFileSync(path.join("cert", "key.pem")),
+//     cert: fs.readFileSync(path.join("cert", "cert.pem"))
+// }, app);
 
-httpsServer.listen(port, (s) => console.log('port is live', port))
+// httpsServer.listen(port, (s) => console.log('port is live', port))
+server.use(middlewares);
+
+
+server.listen(port);
