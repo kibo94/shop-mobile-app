@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/style/theme.dart';
+import 'package:my_app/ui/button.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key, required this.login, required this.buttonName});
-  final Function(String email, String password) login;
+  final Function(String email, String password, GlobalKey<FormState> formKey)
+      login;
   final String buttonName;
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -21,24 +24,27 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Text(
-            "Email",
-            style: TextStyle(
-              color: Colors.blue,
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
-            ),
-          ),
+          // const Text(
+          //   "Email",
+          //   style: TextStyle(
+          //     color: Colors.black,
+          //     fontWeight: FontWeight.bold,
+          //     fontSize: 18,
+          //   ),
+          // ),
           const SizedBox(
-            height: 10,
+            height: 21,
           ),
           _inputWrapper(
             TextFormField(
               expands: false,
-              style: const TextStyle(color: Colors.blue),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
               decoration: const InputDecoration(
-                hintStyle: TextStyle(color: Colors.blue),
-                labelStyle: TextStyle(color: Colors.blue),
+                hintStyle: TextStyle(color: Color.fromRGBO(126, 120, 120, 1)),
+                labelStyle: TextStyle(color: Colors.black),
                 hintText: 'Enter your email',
                 border: InputBorder.none,
 
@@ -64,22 +70,25 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(
             height: 20,
           ),
-          const Text(
-            "Password",
-            style: TextStyle(
-              color: Colors.blue,
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
-            ),
-          ),
+          // const Text(
+          //   "Password",
+          //   style: TextStyle(
+          //     color: Colors.black,
+          //     fontWeight: FontWeight.bold,
+          //     fontSize: 18,
+          //   ),
+          // ),
           const SizedBox(
-            height: 10,
+            height: 21,
           ),
           _inputWrapper(
             TextFormField(
-              style: TextStyle(color: Colors.blue),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
               decoration: const InputDecoration(
-                hintStyle: TextStyle(color: Colors.blue),
+                hintStyle: TextStyle(color: Color.fromRGBO(126, 120, 120, 1)),
                 border: InputBorder.none,
                 hintText: 'Enter your password',
               ),
@@ -96,40 +105,13 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           const SizedBox(
-            height: 20,
+            height: 48,
           ),
-          GestureDetector(
-            onTap: () => widget.login(
-              emailController.text,
-              passwordController.text,
-            ),
-            child: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black,
-                        spreadRadius: -5.0,
-                        blurRadius: 10.0,
-                      ),
-                    ],
-                    border: Border.all(width: 0, color: Colors.white),
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color.fromARGB(255, 29, 59, 228)),
-                child: Column(
-                  children: [
-                    Text(
-                      widget.buttonName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                      ),
-                    )
-                  ],
-                )),
-          ),
+          ActionButton(
+            onDone: () => widget.login(
+                emailController.text, passwordController.text, _formKey)!,
+            btnName: widget.buttonName,
+          )
         ],
       ),
     );
@@ -137,20 +119,20 @@ class _LoginFormState extends State<LoginForm> {
 
   Container _inputWrapper(Widget child) {
     return Container(
-      padding: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
-      child: child,
+      padding: const EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(10),
           color: Colors.white,
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
-              color: Colors.blue,
-              spreadRadius: -5.0,
-              blurRadius: 10.0,
-            ),
+                color: Color.fromRGBO(120, 137, 142, 0.25),
+                offset: Offset(0, 1),
+                blurRadius: 4,
+                spreadRadius: 2),
           ]
           // boxShadow: [BoxShadow(color: Color.fromARGB(255, 75, 47, 47))],
           ),
+      child: child,
     );
   }
 }

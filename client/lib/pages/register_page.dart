@@ -1,12 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:my_app/pages/home_page.dart';
 import 'package:my_app/pages/login_page.dart';
 import 'package:my_app/ui/loading_spinner.dart';
 import 'package:my_app/ui/login_form.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
-
+  static const routeName = '/register';
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
@@ -14,26 +17,33 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   String errorTxt = '';
   _register(String email, String password) async {
-    setState(() {
-      isLoading = true;
-    });
     try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+      await http.post(
+        Uri.parse(
+          'https://192.168.0.103:4000/register',
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'password': password,
+          // Add any other data you want to send in the body
+        }),
+      );
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: ((context) => const LoginPage())),
+      );
+
       setState(() {
         isLoading = false;
       });
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      print(e.code);
+    } catch (e) {
+      print(e);
       setState(() {
         isLoading = false;
-        errorTxt = e.code;
       });
     }
   }
@@ -44,10 +54,10 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 219, 227, 233),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 40),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           height: MediaQuery.of(context).size.height,
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -58,33 +68,38 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(
                   height: 40,
                 ),
-                const Icon(
-                  Icons.app_registration_rounded,
-                  color: Color.fromARGB(255, 43, 42, 42),
-                  size: 100,
-                ),
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  "CREATE ACCOUNT",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 25,
-                  ),
+                Text(
+                  "Create your account",
+                  style: Theme.of(context).textTheme.headline1,
                 ),
                 const SizedBox(
                   height: 40,
                 ),
                 LoginForm(
-                    buttonName: "REGISTER",
-                    login: ((email, password) => _register(email, password))),
+                    buttonName: "Sign Up",
+                    login: ((email, password, formKey) =>
+                        _register(email, password))),
                 const SizedBox(
-                  height: 10,
+                  height: 45,
                 ),
-                GestureDetector(
-                  child: const Text('SIGN IN'),
-                  onTap: () => _signIn(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Already hava a account?',
+                      style: TextStyle(color: Color.fromRGBO(91, 91, 91, 1)),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    GestureDetector(
+                      onTap: () => _signIn(),
+                      child: const Text('Sign in'),
+                    )
+                  ],
                 ),
                 if (isLoading) const CircularProgressIndicator(),
                 if (errorTxt.isNotEmpty)

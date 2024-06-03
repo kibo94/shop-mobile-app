@@ -10,6 +10,7 @@ class Filters extends StatefulWidget {
 }
 
 class _FiltersState extends State<Filters> {
+  String type = "All";
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -25,20 +26,33 @@ class _FiltersState extends State<Filters> {
           ],
         ));
   }
-}
 
-GestureDetector _filter(String name, Function filterItem) {
-  return GestureDetector(
-    onTap: () => filterItem(name),
-    child: Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: 5,
-        horizontal: 10,
+  GestureDetector _filter(String name, Function filterItem) {
+    return GestureDetector(
+      onTap: () => {
+        filterItem(
+          name,
+        ),
+        setState(() {
+          type = name;
+        })
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 5,
+          horizontal: 10,
+        ),
+        margin: const EdgeInsets.only(left: 20),
+        decoration: BoxDecoration(
+            color: type == name
+                ? Colors.black
+                : const Color.fromRGBO(82, 82, 82, 0.21),
+            borderRadius: BorderRadius.circular(5)),
+        child: Text(name,
+            style: Theme.of(context).textTheme.headline2?.copyWith(
+                  color: type == name ? Colors.white : Colors.black,
+                )),
       ),
-      margin: const EdgeInsets.symmetric(horizontal: 5),
-      child: Text(name),
-      decoration: BoxDecoration(
-          color: Colors.grey, borderRadius: BorderRadius.circular(20)),
-    ),
-  );
+    );
+  }
 }

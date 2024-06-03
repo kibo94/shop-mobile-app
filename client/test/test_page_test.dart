@@ -14,7 +14,7 @@ import 'package:my_app/test_page.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp());
     expect(find.byKey(Key('test')), findsOneWidget);
     await tester.tap(find.byKey(Key('test')));
     await tester.pumpAndSettle(Duration(seconds: 1));

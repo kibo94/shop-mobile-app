@@ -1,16 +1,21 @@
-import 'dart:convert';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/models/product.dart';
-import 'package:my_app/pages/login_page.dart';
+import 'package:my_app/providers/data_provider.dart';
+import 'package:my_app/providers/user_provider.dart';
+import 'package:my_app/style/theme.dart';
+import 'package:my_app/ui/add_to_cart.dart';
 import 'package:my_app/ui/filters.dart';
+import 'package:my_app/ui/header.dart';
 import 'package:my_app/ui/loading_spinner.dart';
-import 'package:my_app/ui/product_Iitem.dart';
+import 'package:my_app/ui/products.dart';
+import 'package:my_app/ui/quantity_update.dart';
+import 'package:my_app/ui/side_bar.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
+  static const routeName = "/dashboard";
   final String title;
 
   @override
@@ -19,130 +24,73 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Product> products = [];
+  List<Product> cart = [];
   bool isLoadingProducts = true;
-  final user = FirebaseAuth.instance.currentUser!;
-
-  fetchProdutcs() async {
-    setState(() {
-      isLoadingProducts = true;
-    });
-    var data = await http
-        .get(Uri.parse('https://e-commerce-api-8p0f.onrender.com/products'));
-
-    Iterable list = await json.decode(data.body);
-    var productss = List<Product>.from(
-      list.map((e) => Product.fromJson(e)),
-    );
-    setState(() {
-      products = productss;
-      isLoadingProducts = false;
-    });
-  }
-
+  var backendUrl = "https://e-commerce-api-8p0f.onrender.com";
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
   @override
   void initState() {
     // TODO: implement initState
-    fetchProdutcs();
+    var dataProvider = Provider.of<DataProvider>(context, listen: false);
+    dataProvider.fetchProducts();
     super.initState();
   }
 
-  Widget getProducts() {
-    List<ProductItem> prds = [];
-    products.forEach((product) => {
-          prds.add(ProductItem(product: product)),
-        });
-
-    return Column(children: prds);
-  }
-
   filterItemHandler(String name) async {
-    setState(() {
-      isLoadingProducts = true;
-    });
-    var data = await http.get(Uri.parse(name == 'All'
-        ? 'https://e-commerce-api-8p0f.onrender.com/products'
-        : 'https://e-commerce-api-8p0f.onrender.com/products?type=${name.toLowerCase()}'));
-    Iterable list = await json.decode(data.body);
-    var filteredPrds = List<Product>.from(
-      list.map((e) => Product.fromJson(e)),
-    );
-    setState(() {
-      products = filteredPrds;
-      isLoadingProducts = false;
-    });
-  }
-
-  void _logout() {
-    FirebaseAuth.instance.signOut();
+    var dataProvider = Provider.of<DataProvider>(context, listen: false);
+    dataProvider.filterItems(name);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text('Web shop'),
-        actions: [
-          GestureDetector(
-            onTap: (() => _logout()),
-            child: Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: Row(
-                children: [
-                  Text(user.email!),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  GestureDetector(
-                    onTap: _logout,
-                    child: const Icon(
-                      Icons.logout,
-                      size: 30,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              const Center(
-                  child: Text(
-                'Products',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold),
-              )),
-              const SizedBox(
-                height: 20,
-              ),
-              Filters(
-                filterItem: filterItemHandler,
-              ),
-              !isLoadingProducts
-                  ? Column(
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        getProducts(),
-                      ],
-                    )
-                  : const Padding(
-                      padding: EdgeInsets.only(top: 40),
-                      child: LoadingSpinner(),
-                    ),
-            ],
-          )),
+    return Consumer<DataProvider>(builder: (context, data, child) {
+      return Scaffold(
+        key: _key, // Assign the key to Scaffold.
 
-      // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          toolbarHeight: 56,
+          title: GestureDetector(
+            onTap: () => _key.currentState!.openDrawer(),
+            child: SvgPicture.asset(
+              'assets/images/menu.svg',
+              width: 26,
+              color: shopBlack,
+            ),
+          ),
+          actions: const [
+            Header(),
+          ],
+        ),
+        drawer: SideBar(barKey: _key),
+        bottomNavigationBar:
+            data.selectedProduct != null ? const AddToCart() : null,
+        body: Column(
+          children: [
+            const SizedBox(
+              height: 26,
+            ),
+            Filters(
+              filterItem: filterItemHandler,
+            ),
+            const SizedBox(
+              height: 26,
+            ),
+            !data.isLoadingProducts
+                ? Products(
+                    products: data.products,
+                  )
+                : const Padding(
+                    padding: EdgeInsets.only(top: 40),
+                    child: LoadingSpinner(),
+                  ),
+          ],
+        ),
+
+        // This trailing comma makes auto-formatting nicer for build methods.
+      );
+    });
   }
 }
