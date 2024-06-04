@@ -40,8 +40,25 @@ let products = [
         "comments": [{
             id: 1,
             comment: "Ananas je kao dobra, sve preporuke ovde kupiti...",
-            user: "bojanb106@gmail.com"
-        }],
+            user: "bojanb106@gmail.com",
+            rating: 5,
+        },
+        {
+            id: 1,
+            comment: "nije bas nest",
+            user: "bojanb106@gmail.com",
+            rating: 4,
+        },
+        {
+            id: 1,
+            comment: "nije bas nest",
+            user: "bojanb106@gmail.com",
+            rating: 2,
+        }
+
+
+
+        ],
 
     },
     {
@@ -153,10 +170,7 @@ let products = [
 
 
 
-// var serviceAccount = require("path/to/key.json");
 
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount)
 app.use(express.json())
 app.use(cors({
     origin: "*"
@@ -184,7 +198,7 @@ app.post('/login', async (req, res) => {
 
     try {
         if (!user) throw new Error('User not exists');
-
+        console.log("user loged in")
         res.status(200).json({ user: user });
     } catch (error) {
         console.log("catch triggered")
