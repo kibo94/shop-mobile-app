@@ -1,15 +1,12 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/models/product.dart';
 import 'package:my_app/models/single_product_arguments.dart';
-import 'package:my_app/pages/auth_page.dart';
 import 'package:my_app/pages/home_page.dart';
 import 'package:my_app/pages/login_page.dart';
 import 'package:my_app/pages/profile_page.dart';
 import 'package:my_app/pages/register_page.dart';
 import 'package:my_app/pages/single_product_page.dart';
-import 'package:my_app/providers/data_provider.dart';
+import 'package:my_app/providers/products_provider.dart';
 import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +39,7 @@ Future<void> main() async {
 void run() => runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => DataProvider()),
+          ChangeNotifierProvider(create: (context) => ProductsProvider()),
           ChangeNotifierProvider(create: (context) => UserProvider()),
         ],
         child: MyApp(),

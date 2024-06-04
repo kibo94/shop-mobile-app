@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:my_app/models/user.dart';
 import 'package:my_app/pages/home_page.dart';
 import 'package:my_app/pages/register_page.dart';
-import 'package:my_app/providers/data_provider.dart';
+import 'package:my_app/providers/products_provider.dart';
 import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/login_form.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+
+var backendUrl = "https://shop-mobile-app-4.onrender.com";
+// var backendUrl = "https://192.168.0.103:4000";
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -48,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       var res = await http.post(
         Uri.parse(
-          'https://192.168.0.103:4000/login',
+          '${backendUrl}/login',
         ),
         headers: <String, String>{
           'Content-Type': 'application/json',

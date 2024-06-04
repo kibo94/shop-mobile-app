@@ -1,14 +1,26 @@
+import 'package:my_app/models/cart_product.dart';
 import 'package:my_app/models/product.dart';
 import "package:flutter/material.dart";
 
 class Util {
-  static int getTotalInCart(List<Product> products) {
+  static int getTotalInCart(List<CartProductModel> products) {
     int sum = 0;
     products.forEach((product) {
       sum = sum + (product.price * product.quantity);
     });
 
     return sum;
+  }
+
+  static int getRatingForProduct(Product product) {
+    int sum = 0;
+    product.comments?.forEach((product) {
+      sum = sum + product.rating;
+    });
+    if (product.comments!.isEmpty) {
+      return 1;
+    }
+    return (sum / product.comments!.length).floor();
   }
 
   static SnackBar snackBar(String msg, BuildContext ctx) {
@@ -24,5 +36,20 @@ class Util {
             ),
       ),
     );
+  }
+
+  static CartProductModel createCartModel(Product product, int quantity) {
+    CartProductModel cartProduct = CartProductModel(
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        type: product.type,
+        author: product.author,
+        inCart: product.inCart,
+        isLiked: product.isLiked,
+        details: product.details,
+        rating: product.rating,
+        quantity: quantity);
+    return cartProduct;
   }
 }

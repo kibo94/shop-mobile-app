@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/style/theme.dart';
 
 class LoadingSpinner extends StatefulWidget {
   const LoadingSpinner({super.key});
@@ -31,6 +32,7 @@ class _LoadingSpinnerState extends State<LoadingSpinner>
   @override
   Widget build(BuildContext context) {
     return CircularProgressIndicator(
+      color: shopBlack,
       value: controller.value,
       semanticsLabel: 'Circular progress indicator',
     );

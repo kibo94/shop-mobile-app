@@ -48,10 +48,12 @@ class _FiltersState extends State<Filters> {
                 ? Colors.black
                 : const Color.fromRGBO(82, 82, 82, 0.21),
             borderRadius: BorderRadius.circular(5)),
-        child: Text(name,
-            style: Theme.of(context).textTheme.headline2?.copyWith(
-                  color: type == name ? Colors.white : Colors.black,
-                )),
+        child: Text(
+          name,
+          style: Theme.of(context).textTheme.headline2?.copyWith(
+                color: type == name ? Colors.white : Colors.black,
+              ),
+        ),
       ),
     );
   }

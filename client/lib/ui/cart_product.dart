@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:my_app/models/cart_product.dart';
 import 'package:my_app/models/product.dart';
-import 'package:my_app/providers/data_provider.dart';
-import 'package:my_app/ui/quantity_update.dart';
+import 'package:my_app/providers/products_provider.dart';
+import 'package:my_app/ui/product_quantity_update.dart';
+import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
 
 class CartProduct extends StatefulWidget {
   const CartProduct({super.key, required this.product});
-  final Product product;
+  final CartProductModel product;
 
   @override
   State<CartProduct> createState() => _CartProductState();
@@ -16,7 +18,7 @@ class CartProduct extends StatefulWidget {
 class _CartProductState extends State<CartProduct> {
   @override
   Widget build(BuildContext context) {
-    var dataProvider = Provider.of<DataProvider>(context, listen: false);
+    var dataProvider = Provider.of<ProductsProvider>(context, listen: false);
     return Container(
       clipBehavior: Clip.hardEdge,
       width: MediaQuery.of(context).size.width - 40,

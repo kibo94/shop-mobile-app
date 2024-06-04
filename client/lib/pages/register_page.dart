@@ -7,6 +7,9 @@ import 'package:my_app/ui/loading_spinner.dart';
 import 'package:my_app/ui/login_form.dart';
 import 'package:http/http.dart' as http;
 
+var backendUrl = "https://shop-mobile-app-4.onrender.com";
+// var backendUrl = "https://192.168.0.103:4000";
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
   static const routeName = '/register';
@@ -20,7 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
     try {
       await http.post(
         Uri.parse(
-          'https://192.168.0.103:4000/register',
+          '${backendUrl}/register',
         ),
         headers: <String, String>{
           'Content-Type': 'application/json',

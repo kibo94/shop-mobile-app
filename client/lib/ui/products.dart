@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/models/product.dart';
-import 'package:my_app/providers/data_provider.dart';
+import 'package:my_app/providers/products_provider.dart';
 import 'package:my_app/ui/product_Item.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +10,7 @@ class Products extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var data = Provider.of<DataProvider>(context, listen: false);
+    var data = Provider.of<ProductsProvider>(context, listen: false);
     return Expanded(
         child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -26,8 +26,7 @@ class Products extends StatelessWidget {
           return ProductItem(
             cart: data.cart,
             onFavoriteClick: (Product prod) => () => {},
-            onAddToCartClick: (Product prod) =>
-                data.onAddToCartClickHanlder(prod),
+            onAddToCartClick: (Product prod) => data.addProductToCart(prod),
             product: products[index],
           );
         },

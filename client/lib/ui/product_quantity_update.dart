@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/models/product.dart';
-import 'package:my_app/providers/data_provider.dart';
+import 'package:my_app/models/cart_product.dart';
+import 'package:my_app/providers/products_provider.dart';
 import 'package:provider/provider.dart';
 
 class QuantityUpdate extends StatelessWidget {
@@ -10,12 +10,12 @@ class QuantityUpdate extends StatelessWidget {
       required this.isUpading,
       required this.quantity});
   final bool isUpading;
-  final Product product;
+  final CartProductModel product;
   final int quantity;
 
   @override
   Widget build(BuildContext context) {
-    var dataProvider = Provider.of<DataProvider>(context, listen: false);
+    var dataProvider = Provider.of<ProductsProvider>(context, listen: false);
     return Container(
       width: 130,
       margin: const EdgeInsets.only(bottom: 10),

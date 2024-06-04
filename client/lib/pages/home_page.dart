@@ -1,15 +1,15 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/models/product.dart';
-import 'package:my_app/providers/data_provider.dart';
+import 'package:my_app/providers/products_provider.dart';
 import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/add_to_cart.dart';
-import 'package:my_app/ui/filters.dart';
+import 'package:my_app/ui/product_filters.dart';
 import 'package:my_app/ui/header.dart';
 import 'package:my_app/ui/loading_spinner.dart';
 import 'package:my_app/ui/products.dart';
-import 'package:my_app/ui/quantity_update.dart';
+import 'package:my_app/ui/product_quantity_update.dart';
 import 'package:my_app/ui/side_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -26,24 +26,26 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Product> products = [];
   List<Product> cart = [];
   bool isLoadingProducts = true;
-  var backendUrl = "https://e-commerce-api-8p0f.onrender.com";
+
+  var backendUrl = "https://shop-mobile-app-4.onrender.com";
+  // var backendUrl = "https://localhost:4000";
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a key
   @override
   void initState() {
     // TODO: implement initState
-    var dataProvider = Provider.of<DataProvider>(context, listen: false);
+    var dataProvider = Provider.of<ProductsProvider>(context, listen: false);
     dataProvider.fetchProducts();
     super.initState();
   }
 
   filterItemHandler(String name) async {
-    var dataProvider = Provider.of<DataProvider>(context, listen: false);
-    dataProvider.filterItems(name);
+    var dataProvider = Provider.of<ProductsProvider>(context, listen: false);
+    dataProvider.filterProducts(name);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DataProvider>(builder: (context, data, child) {
+    return Consumer<ProductsProvider>(builder: (context, data, child) {
       return Scaffold(
         key: _key, // Assign the key to Scaffold.
 
@@ -65,8 +67,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         drawer: SideBar(barKey: _key),
-        bottomNavigationBar:
-            data.selectedProduct != null ? const AddToCart() : null,
+        bottomNavigationBar: data.selectedProduct != null
+            ? AddToCart(
+                productName: data.products
+                    .singleWhere(
+                        (product) => product.id == data.selectedProduct)
+                    .name,
+              )
+            : null,
         body: Column(
           children: [
             const SizedBox(

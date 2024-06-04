@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:my_app/providers/data_provider.dart';
+import 'package:my_app/providers/products_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/add_to_cart.dart';
 import 'package:my_app/ui/header.dart';
@@ -20,7 +20,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   final GlobalKey<ScaffoldState> _key = GlobalKey(); // Create a ke
   @override
   Widget build(BuildContext context) {
-    var data = Provider.of<DataProvider>(context, listen: true);
+    var data = Provider.of<ProductsProvider>(context, listen: true);
     return Scaffold(
       key: _key, // A
       backgroundColor: Colors.white,
@@ -40,8 +40,13 @@ class _FavoritesPageState extends State<FavoritesPage> {
         ],
       ),
       drawer: SideBar(barKey: _key),
-      bottomNavigationBar:
-          data.selectedProduct != null ? const AddToCart() : null,
+      bottomNavigationBar: data.selectedProduct != null
+          ? AddToCart(
+              productName: data.products
+                  .singleWhere((product) => product.id == data.selectedProduct)
+                  .name,
+            )
+          : null,
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

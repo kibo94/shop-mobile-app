@@ -4,7 +4,7 @@ import 'package:my_app/pages/cart_page.dart';
 import 'package:my_app/pages/favorites_page.dart';
 import 'package:my_app/pages/login_page.dart';
 import 'package:my_app/pages/profile_page.dart';
-import 'package:my_app/providers/data_provider.dart';
+import 'package:my_app/providers/products_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +13,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var data = Provider.of<DataProvider>(context, listen: true);
+    var data = Provider.of<ProductsProvider>(context, listen: true);
 
     return Padding(
       padding: const EdgeInsets.only(right: 20),

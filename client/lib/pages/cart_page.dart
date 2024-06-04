@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:my_app/providers/data_provider.dart';
+import 'package:my_app/providers/products_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/button.dart';
 import 'package:my_app/ui/cart_products.dart';
@@ -22,7 +22,7 @@ class _CartPageState extends State<CartPage> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    var dataProvider = Provider.of<DataProvider>(context, listen: true);
+    var dataProvider = Provider.of<ProductsProvider>(context, listen: true);
     return Scaffold(
       key: _key,
       backgroundColor: Colors.white,

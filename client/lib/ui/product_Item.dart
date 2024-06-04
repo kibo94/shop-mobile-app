@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:my_app/models/cart_product.dart';
 import 'package:my_app/models/product.dart';
 import 'package:my_app/pages/single_product_page.dart';
-import 'package:my_app/providers/data_provider.dart';
+import 'package:my_app/providers/products_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ class ProductItem extends StatefulWidget {
       required this.onFavoriteClick,
       required this.onAddToCartClick});
   final Product product;
-  final List<Product> cart;
+  final List<CartProductModel> cart;
   final Function(Product) onFavoriteClick;
   final Function(Product) onAddToCartClick;
 
@@ -66,7 +67,7 @@ class _ProductItemState extends State<ProductItem>
 
   @override
   Widget build(BuildContext context) {
-    var dataProvider = Provider.of<DataProvider>(context, listen: false);
+    var dataProvider = Provider.of<ProductsProvider>(context, listen: false);
     // bool inCart = widget.product.inCart;
     bool isFavorite = widget.product.isLiked;
     return GestureDetector(
@@ -149,7 +150,7 @@ class _ProductItemState extends State<ProductItem>
                 children: [
                   GestureDetector(
                     onTap: () => {
-                      dataProvider.onAddToFavorites(widget.product),
+                      dataProvider.addProductToFavorites(widget.product),
                       if (favoriteAnimationControler.value == 1)
                         {
                           favoriteAnimationControler.reverse(),

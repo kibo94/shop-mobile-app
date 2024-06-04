@@ -6,7 +6,6 @@ class Product {
   final int price;
   final String name;
   final id;
-  int quantity;
   final String? type;
   final String author;
   final String details;
@@ -16,19 +15,19 @@ class Product {
   String? imgUrl;
   List<Comment>? comments;
 
-  Product(
-      {required this.id,
-      required this.name,
-      required this.price,
-      required this.type,
-      required this.author,
-      required this.inCart,
-      required this.isLiked,
-      required this.details,
-      required this.rating,
-      this.comments,
-      this.imgUrl,
-      required this.quantity});
+  Product({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.type,
+    required this.author,
+    required this.inCart,
+    required this.isLiked,
+    required this.details,
+    required this.rating,
+    this.comments,
+    this.imgUrl,
+  });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     var comments = <Comment>[];
@@ -42,7 +41,6 @@ class Product {
         author: json['author'],
         name: json['name'],
         price: json['price'],
-        quantity: json['quantity]'] ?? 0,
         inCart: json['inCart'] ?? false,
         isLiked: json['isLiked'] ?? false,
         details: json['details'],

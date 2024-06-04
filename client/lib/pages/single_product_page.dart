@@ -1,14 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:my_app/models/cart_product.dart';
 import 'package:my_app/models/product.dart';
 import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/add_to_cart.dart';
-import 'package:my_app/ui/comments.dart';
-import 'package:my_app/ui/rating.dart';
-import 'package:my_app/providers/data_provider.dart';
+import 'package:my_app/ui/product_comments.dart';
+import 'package:my_app/ui/product_rating.dart';
+import 'package:my_app/providers/products_provider.dart';
 import 'package:my_app/ui/header.dart';
+import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
 
 class SingleProductPage extends StatefulWidget {
@@ -19,7 +21,7 @@ class SingleProductPage extends StatefulWidget {
       this.onAddToCartClick});
   static const routeName = "/single-product";
   final Product product;
-  final List<Product> cart;
+  final List<CartProductModel> cart;
   final Function(Product)? onAddToCartClick;
   @override
   State<SingleProductPage> createState() => _SingleProductPageState();
@@ -30,7 +32,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    var dataProvider = Provider.of<DataProvider>(context, listen: true);
+    var dataProvider = Provider.of<ProductsProvider>(context, listen: true);
     var userProvider = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -42,8 +44,11 @@ class _SingleProductPageState extends State<SingleProductPage> {
           Header(),
         ],
       ),
-      bottomNavigationBar:
-          dataProvider.selectedProduct != null ? const AddToCart() : null,
+      bottomNavigationBar: dataProvider.selectedProduct != null
+          ? AddToCart(
+              productName: widget.product.name,
+            )
+          : null,
       body: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 30),
@@ -62,12 +67,12 @@ class _SingleProductPageState extends State<SingleProductPage> {
               ),
               Row(
                 children: [
-                  Rating(rating: widget.product.rating),
+                  Rating(rating: Util.getRatingForProduct(widget.product)),
                   const SizedBox(
                     width: 10,
                   ),
                   Text(
-                    '${widget.product.rating} / 5',
+                    '${Util.getRatingForProduct(widget.product)} / 5',
                     style: const TextStyle(
                       fontSize: 20,
                     ),
@@ -131,9 +136,9 @@ class _SingleProductPageState extends State<SingleProductPage> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phase',
-                        style: TextStyle(
+                      Text(
+                        widget.product.details,
+                        style: const TextStyle(
                           color: shopGrey1,
                           fontSize: 18,
                         ),
