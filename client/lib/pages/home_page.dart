@@ -1,7 +1,7 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/models/product.dart';
-import 'package:my_app/providers/products_provider.dart';
+import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/add_to_cart.dart';
@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-  static const routeName = "/dashboard";
+  static const routeName = "/";
   final String title;
 
   @override
@@ -33,19 +33,19 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     // TODO: implement initState
-    var dataProvider = Provider.of<ProductsProvider>(context, listen: false);
+    var dataProvider = Provider.of<ProductProvider>(context, listen: false);
     dataProvider.fetchProducts();
     super.initState();
   }
 
   filterItemHandler(String name) async {
-    var dataProvider = Provider.of<ProductsProvider>(context, listen: false);
+    var dataProvider = Provider.of<ProductProvider>(context, listen: false);
     dataProvider.filterProducts(name);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProductsProvider>(builder: (context, data, child) {
+    return Consumer<ProductProvider>(builder: (context, data, child) {
       return Scaffold(
         key: _key, // Assign the key to Scaffold.
 

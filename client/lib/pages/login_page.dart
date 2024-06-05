@@ -1,22 +1,14 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:my_app/models/user.dart';
-import 'package:my_app/pages/home_page.dart';
 import 'package:my_app/pages/register_page.dart';
-import 'package:my_app/providers/products_provider.dart';
 import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
-import 'package:my_app/ui/login_form.dart';
-import 'package:http/http.dart' as http;
+import 'package:my_app/ui/login_register_form.dart';
 import 'package:provider/provider.dart';
-
-var backendUrl = "https://shop-mobile-app-4.onrender.com";
-// var backendUrl = "https://192.168.0.103:4000";
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-  static const routeName = "/";
+  static const routeName = "/login";
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -38,62 +30,7 @@ class UserResponse {
 class _LoginPageState extends State<LoginPage> {
   _login(String email, String password, formKey) async {
     var userProvider = Provider.of<UserProvider>(context, listen: false);
-    // await http.post(Uri.parse('https://192.168.0.100:3000/send'));
-    // var data = await http.get(Uri.parse('https://192.168.0.100:3000'));
-    // var user = Profile.fromJson(json.decode(data.body));
-    // var productss = List<Product>.from(
-    //   list.map((e) => Product.fromJson(e)),
-    // );
-
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      var res = await http.post(
-        Uri.parse(
-          '${backendUrl}/login',
-        ),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password,
-          // Add any other data you want to send in the body
-        }),
-      );
-      var user = UserResponse.fromJson(
-        json.decode(res.body),
-      );
-      userProvider.setUser(user.user!);
-      if (res.statusCode == 200) {
-        // ignore: use_build_context_synchronously
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: ((context) => const MyHomePage(
-                    title: 'Home',
-                  ))),
-        );
-      }
-
-      if (res.statusCode == 404) {
-        setState(() {
-          isLoading = false;
-        });
-        setState(() {
-          errorMessage = "User not found";
-        });
-      }
-
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    userProvider.loginTheUser(email, password, context);
   }
 
   bool isLoading = false;
@@ -126,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 48,
                 ),
-                LoginForm(
+                LoginRegisterForm(
                     buttonName: 'Sign in',
                     login: ((email, password, formKey) =>
                         _login(email, password, formKey))),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/models/cart_product.dart';
-import 'package:my_app/providers/products_provider.dart';
+import 'package:my_app/providers/product_provider.dart';
 import 'package:provider/provider.dart';
 
 class QuantityUpdate extends StatelessWidget {
@@ -15,10 +15,9 @@ class QuantityUpdate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var dataProvider = Provider.of<ProductsProvider>(context, listen: false);
+    var dataProvider = Provider.of<ProductProvider>(context, listen: false);
     return Container(
       width: 130,
-      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(vertical: 5.5, horizontal: 6.5),
       decoration: BoxDecoration(
           color: Colors.white,
@@ -34,8 +33,11 @@ class QuantityUpdate extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: () =>
-                dataProvider.subtractOneFromQuantity(product, isUpading),
+            onTap: () => dataProvider.changeQuantityOfProduct(
+              product,
+              isUpading,
+              true,
+            ),
             child: Container(
               width: 33,
               height: 33,
@@ -62,7 +64,11 @@ class QuantityUpdate extends StatelessWidget {
             width: 20,
           ),
           GestureDetector(
-            onTap: () => dataProvider.addOneToQuantity(product, isUpading),
+            onTap: () => dataProvider.changeQuantityOfProduct(
+              product,
+              isUpading,
+              false,
+            ),
             child: Container(
               width: 33,
               height: 33,

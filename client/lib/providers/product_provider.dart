@@ -1,44 +1,38 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:my_app/models/cart_product.dart';
 import 'package:my_app/models/comment.dart';
 import 'package:my_app/models/product.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_app/providers/user_provider.dart';
-import 'package:my_app/ui/cart_product.dart';
 import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
 
-class ProductsProvider extends ChangeNotifier {
+class ProductProvider extends ChangeNotifier {
   List<Product> _products = [];
   int? selectedProduct;
   int quantity = 1;
-  List<CartProductModel> _cart = [];
-  List<Product> _favorites = [];
+  final List<CartProductModel> _cart = [];
+  final List<Product> _favorites = [];
   List<Product> get products => _products;
   List<Product> get favorites => _favorites;
   List<CartProductModel> get cart => _cart;
   bool isLoadingProducts = false;
   var backendUrl = "https://shop-mobile-app-4.onrender.com";
   // var backendUrl = "https://192.168.0.103:4000";
-
   setProduct(int? product) {
     selectedProduct = product;
-
     notifyListeners();
   }
 
   fetchProducts() async {
     isLoadingProducts = true;
-
-    var data2 = await http.get(Uri.parse('${backendUrl}/products'));
-    Iterable list = await json.decode(data2.body);
-    var productss = List<Product>.from(
+    var data = await http.get(Uri.parse('$backendUrl/products'));
+    Iterable list = await json.decode(data.body);
+    var products = List<Product>.from(
       list.map((e) => Product.fromJson(e)),
     );
-
-    _products = productss;
+    _products = products;
     isLoadingProducts = false;
     notifyListeners();
   }
@@ -55,15 +49,12 @@ class ProductsProvider extends ChangeNotifier {
         },
         body: jsonEncode(<String, String>{
           'type': name,
-
-          // Add any other data you want to send in the body
         }),
       );
       Iterable list = await json.decode(data.body);
       var productsData = List<Product>.from(
         list.map((e) => Product.fromJson(e)),
       );
-
       _products = productsData;
       isLoadingProducts = false;
       notifyListeners();
@@ -76,15 +67,9 @@ class ProductsProvider extends ChangeNotifier {
       cartPrd.quantity = quantity;
       _cart.add(cartPrd);
     } else {
-      var prdQuantity =
-          _cart[_cart.indexWhere((element) => element.id == selectedProduct)]
-              .quantity;
-      prdQuantity = quantity + prdQuantity;
-      _cart[_cart.indexWhere((element) => element.id == selectedProduct)]
-          .quantity = prdQuantity;
+      cartPrd.quantity = quantity + cartPrd.quantity;
     }
     selectedProduct = null;
-
     notifyListeners();
   }
 
@@ -92,48 +77,38 @@ class ProductsProvider extends ChangeNotifier {
     product.isLiked = !product.isLiked;
     if (_favorites.where((favEl) => favEl.id == product.id).isEmpty) {
       _favorites.add(product);
-    } else {
-      _favorites.removeWhere((favorite) => favorite.id == product.id);
+      return;
     }
+    _favorites.removeWhere((favorite) => favorite.id == product.id);
     notifyListeners();
   }
 
-  addOneToQuantity(CartProductModel product, bool isUpading) {
+  changeQuantityOfProduct(
+      CartProductModel product, bool isUpading, bool isSubstract) {
     if (isUpading) {
-      var prdQuantity =
-          _cart[_cart.indexWhere((element) => element.id == product.id)]
-              .quantity;
-      _cart[_cart.indexWhere((element) => element.id == product.id)].quantity =
-          prdQuantity = prdQuantity + 1;
+      CartProductModel cartProduct =
+          _cart[_cart.indexWhere((prd) => prd.id == product.id)];
+      cartProduct.quantity = cartProduct.quantity = isSubstract
+          ? cartProduct.quantity <= 1
+              ? 1
+              : cartProduct.quantity - 1
+          : cartProduct.quantity + 1;
+      notifyListeners();
+      return;
     }
-    quantity = quantity + 1;
-    notifyListeners();
-  }
-
-  subtractOneFromQuantity(CartProductModel product, bool isUpading) {
-    if (isUpading) {
-      var prdQuantity =
-          _cart[_cart.indexWhere((element) => element.id == product.id)]
-              .quantity;
-      _cart[_cart.indexWhere((element) => element.id == product.id)].quantity =
-          prdQuantity = prdQuantity <= 1 ? 1 : prdQuantity - 1;
-    } else {
-      quantity = quantity <= 1 ? 1 : quantity - 1;
-    }
-
+    quantity = isSubstract
+        ? quantity = quantity <= 1 ? 1 : quantity - 1
+        : quantity + 1;
     notifyListeners();
   }
 
   removeProductFromCart(CartProductModel product) {
     _cart.removeWhere((element) => element.id == product.id);
-
     notifyListeners();
   }
 
   addCommentToProduct(id, String comment, String name, BuildContext ctx) async {
     var userProvider = Provider.of<UserProvider>(ctx, listen: false);
-    final Product product =
-        _products[_products.indexWhere((element) => element.id == id)];
     _products[_products.indexWhere((element) => element.id == id)]
         .comments
         ?.insert(
@@ -145,20 +120,14 @@ class ProductsProvider extends ChangeNotifier {
               rating: 2,
             ));
 
-    var data = await http.post(
+    await http.post(
       Uri.parse(
         '$backendUrl/comments',
       ),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        'id': id,
-        "comment": comment,
-        "user": name
-
-        // Add any other data you want to send in the body
-      }),
+      body: jsonEncode({'id': id, "comment": comment, "user": name}),
     );
     notifyListeners();
   }

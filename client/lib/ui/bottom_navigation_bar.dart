@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/style/theme.dart';
 
 class BottomNavigationBar extends StatelessWidget {
   const BottomNavigationBar({super.key, required this.child});

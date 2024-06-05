@@ -1,6 +1,9 @@
 import 'package:my_app/models/cart_product.dart';
 import 'package:my_app/models/product.dart';
 import "package:flutter/material.dart";
+import 'package:my_app/pages/login_page.dart';
+import 'package:my_app/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class Util {
   static int getTotalInCart(List<CartProductModel> products) {
@@ -51,5 +54,20 @@ class Util {
         rating: product.rating,
         quantity: quantity);
     return cartProduct;
+  }
+
+  static makeActionDependIfUserLogedIn(BuildContext ctx, Function onDone) {
+    bool isUserLogedIn =
+        Provider.of<UserProvider>(ctx, listen: false).user != null;
+    if (isUserLogedIn) {
+      onDone();
+    } else {
+      Navigator.push(
+        ctx,
+        MaterialPageRoute(
+          builder: ((context) => const LoginPage()),
+        ),
+      );
+    }
   }
 }

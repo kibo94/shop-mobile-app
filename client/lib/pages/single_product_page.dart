@@ -8,7 +8,7 @@ import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/add_to_cart.dart';
 import 'package:my_app/ui/product_comments.dart';
 import 'package:my_app/ui/product_rating.dart';
-import 'package:my_app/providers/products_provider.dart';
+import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/ui/header.dart';
 import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
@@ -32,8 +32,8 @@ class _SingleProductPageState extends State<SingleProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    var dataProvider = Provider.of<ProductsProvider>(context, listen: true);
-    var userProvider = Provider.of<UserProvider>(context, listen: false);
+    var dataProvider = Provider.of<ProductProvider>(context, listen: true);
+
     return Scaffold(
       backgroundColor: Colors.white,
       extendBody: false,
@@ -188,13 +188,10 @@ class _SingleProductPageState extends State<SingleProductPage> {
                               ),
                               GestureDetector(
                                 onTap: () => {
-                                  dataProvider.addCommentToProduct(
-                                    widget.product.id,
-                                    state.value!,
-                                    userProvider.user!.email,
+                                  Util.makeActionDependIfUserLogedIn(
                                     context,
-                                  ),
-                                  controller.clear(),
+                                    () => _addCommnetToProduct(state),
+                                  )
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(10),
@@ -233,5 +230,17 @@ class _SingleProductPageState extends State<SingleProductPage> {
         ),
       ),
     );
+  }
+
+  _addCommnetToProduct(FormFieldState<String> state) {
+    var dataProvider = Provider.of<ProductProvider>(context, listen: false);
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
+    dataProvider.addCommentToProduct(
+      widget.product.id,
+      state.value!,
+      userProvider.user!.email,
+      context,
+    );
+    controller.clear();
   }
 }

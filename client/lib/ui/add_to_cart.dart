@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/providers/products_provider.dart';
+import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/product_quantity_update.dart';
 import 'package:my_app/utils/util.dart';
@@ -11,7 +11,7 @@ class AddToCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var data = Provider.of<ProductsProvider>(context, listen: true);
+    var data = Provider.of<ProductProvider>(context, listen: true);
     return Container(
       alignment: Alignment.bottomCenter,
       height: 180,
@@ -41,8 +41,8 @@ class AddToCart extends StatelessWidget {
                   children: [
                     Image.asset(
                       'assets/images/product.png',
-                      width: 75,
-                      height: 70,
+                      width: 80,
+                      height: 75,
                     ),
                     const SizedBox(
                       width: 17,
@@ -66,17 +66,14 @@ class AddToCart extends StatelessWidget {
                     width: MediaQuery.of(context).size.width / 2,
                     color: shopGrey2,
                     height: 65,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      child: QuantityUpdate(
-                        quantity: data.quantity,
-                        product: Util.createCartModel(
-                            data.products.singleWhere(
-                              (element) => element.id == data.selectedProduct,
-                            ),
-                            data.quantity),
-                        isUpading: false,
-                      ),
+                    child: QuantityUpdate(
+                      quantity: data.quantity,
+                      product: Util.createCartModel(
+                          data.products.singleWhere(
+                            (element) => element.id == data.selectedProduct,
+                          ),
+                          data.quantity),
+                      isUpading: false,
                     ),
                   ),
                   GestureDetector(
@@ -110,16 +107,13 @@ class AddToCart extends StatelessWidget {
             ],
           ),
           Positioned(
-            right: -10,
-            top: 5,
+            right: 10,
+            top: 10,
             child: GestureDetector(
               onTap: () => data.setProduct(null),
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 5, right: 10),
-                child: const Icon(
-                  Icons.close,
-                  size: 35,
-                ),
+              child: const Icon(
+                Icons.close,
+                size: 35,
               ),
             ),
           ),

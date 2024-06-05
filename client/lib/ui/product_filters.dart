@@ -19,6 +19,7 @@ class _FiltersState extends State<Filters> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Make api for geting a filters
             _filter('All', widget.filterItem),
             _filter('Fruits', widget.filterItem),
             _filter('Laptops', widget.filterItem),
@@ -44,10 +45,11 @@ class _FiltersState extends State<Filters> {
         ),
         margin: const EdgeInsets.only(left: 20),
         decoration: BoxDecoration(
-            color: type == name
-                ? Colors.black
-                : const Color.fromRGBO(82, 82, 82, 0.21),
-            borderRadius: BorderRadius.circular(5)),
+          color: type == name
+              ? Colors.black
+              : const Color.fromRGBO(82, 82, 82, 0.21),
+          borderRadius: BorderRadius.circular(5),
+        ),
         child: Text(
           name,
           style: Theme.of(context).textTheme.headline2?.copyWith(

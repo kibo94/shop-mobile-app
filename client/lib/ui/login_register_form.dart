@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/button.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key, required this.login, required this.buttonName});
+class LoginRegisterForm extends StatefulWidget {
+  const LoginRegisterForm(
+      {super.key, required this.login, required this.buttonName});
   final Function(String email, String password, GlobalKey<FormState> formKey)
       login;
   final String buttonName;
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<LoginRegisterForm> createState() => _LoginRegisterFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginRegisterFormState extends State<LoginRegisterForm> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -78,35 +79,35 @@ class _LoginFormState extends State<LoginForm> {
           //     fontSize: 18,
           //   ),
           // ),
-          const SizedBox(
-            height: 21,
-          ),
-          _inputWrapper(
-            TextFormField(
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-              ),
-              decoration: const InputDecoration(
-                hintStyle: TextStyle(color: Color.fromRGBO(126, 120, 120, 1)),
-                border: InputBorder.none,
-                hintText: 'Enter your password',
-              ),
-              controller: passwordController,
-              validator: (String? value) {
-                if (value == null || value.length < 3) {
-                  setState(() {
-                    passwordErrText = "Please enter some password";
-                  });
-                  return 'Please enter some password';
-                }
-                return null;
-              },
-            ),
-          ),
-          const SizedBox(
-            height: 48,
-          ),
+          // const SizedBox(
+          //   height: 21,
+          // ),
+          // _inputWrapper(
+          //   TextFormField(
+          //     style: const TextStyle(
+          //       color: Colors.black,
+          //       fontSize: 18,
+          //     ),
+          //     decoration: const InputDecoration(
+          //       hintStyle: TextStyle(color: Color.fromRGBO(126, 120, 120, 1)),
+          //       border: InputBorder.none,
+          //       hintText: 'Enter your password',
+          //     ),
+          //     controller: passwordController,
+          //     validator: (String? value) {
+          //       if (value == null || value.length < 3) {
+          //         setState(() {
+          //           passwordErrText = "Please enter some password";
+          //         });
+          //         return 'Please enter some password';
+          //       }
+          //       return null;
+          //     },
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 48,
+          // ),
           ActionButton(
             onDone: () => widget.login(
                 emailController.text, passwordController.text, _formKey)!,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/models/product.dart';
-import 'package:my_app/providers/products_provider.dart';
+import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/ui/product_Item.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +10,7 @@ class Products extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var data = Provider.of<ProductsProvider>(context, listen: false);
+    var data = Provider.of<ProductProvider>(context, listen: false);
     return Expanded(
         child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),

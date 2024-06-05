@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_app/models/cart_product.dart';
-import 'package:my_app/models/product.dart';
-import 'package:my_app/providers/products_provider.dart';
+import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/ui/product_quantity_update.dart';
-import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
 
 class CartProduct extends StatefulWidget {
@@ -18,7 +16,7 @@ class CartProduct extends StatefulWidget {
 class _CartProductState extends State<CartProduct> {
   @override
   Widget build(BuildContext context) {
-    var dataProvider = Provider.of<ProductsProvider>(context, listen: false);
+    var dataProvider = Provider.of<ProductProvider>(context, listen: false);
     return Container(
       clipBehavior: Clip.hardEdge,
       width: MediaQuery.of(context).size.width - 40,
@@ -59,7 +57,6 @@ class _CartProductState extends State<CartProduct> {
                     width: 28,
                   ),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(widget.product.name.toUpperCase(),
@@ -90,13 +87,20 @@ class _CartProductState extends State<CartProduct> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  QuantityUpdate(
-                    product: widget.product,
-                    quantity: dataProvider.cart
-                        .singleWhere(
-                            (element) => element.id == widget.product.id)
-                        .quantity,
-                    isUpading: true,
+                  Column(
+                    children: [
+                      QuantityUpdate(
+                        product: widget.product,
+                        quantity: dataProvider.cart
+                            .singleWhere(
+                                (element) => element.id == widget.product.id)
+                            .quantity,
+                        isUpading: true,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 16, bottom: 10),

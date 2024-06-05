@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_app/pages/cart_page.dart';
 import 'package:my_app/pages/favorites_page.dart';
-import 'package:my_app/pages/login_page.dart';
 import 'package:my_app/pages/profile_page.dart';
-import 'package:my_app/providers/products_provider.dart';
+import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/style/theme.dart';
+import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
 
 class Header extends StatelessWidget {
@@ -13,7 +13,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var data = Provider.of<ProductsProvider>(context, listen: true);
+    var data = Provider.of<ProductProvider>(context, listen: true);
 
     return Padding(
       padding: const EdgeInsets.only(right: 20),
@@ -28,14 +28,19 @@ class Header extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: ((context) => const FavoritesPage()),
-                        ),
-                      )
+                      Util.makeActionDependIfUserLogedIn(
+                          context,
+                          () => {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: ((context) =>
+                                        const FavoritesPage()),
+                                  ),
+                                )
+                              })
                     },
-                    child: const Padding(
+                    child: Container(
                       padding: EdgeInsets.only(right: 16),
                       child: Icon(
                         Icons.favorite_border_outlined,

@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_app/models/cart_product.dart';
 import 'package:my_app/models/product.dart';
 import 'package:my_app/pages/single_product_page.dart';
-import 'package:my_app/providers/products_provider.dart';
+import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
@@ -67,7 +67,7 @@ class _ProductItemState extends State<ProductItem>
 
   @override
   Widget build(BuildContext context) {
-    var dataProvider = Provider.of<ProductsProvider>(context, listen: false);
+    var dataProvider = Provider.of<ProductProvider>(context, listen: false);
     // bool inCart = widget.product.inCart;
     bool isFavorite = widget.product.isLiked;
     return GestureDetector(
@@ -150,25 +150,10 @@ class _ProductItemState extends State<ProductItem>
                 children: [
                   GestureDetector(
                     onTap: () => {
-                      dataProvider.addProductToFavorites(widget.product),
-                      if (favoriteAnimationControler.value == 1)
-                        {
-                          favoriteAnimationControler.reverse(),
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            Util.snackBar(
-                                "The item has been removed from favorites",
-                                context),
-                          ),
-                        }
-                      else
-                        {
-                          favoriteAnimationControler.forward(),
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            Util.snackBar(
-                                "The item has been added to favorites",
-                                context),
-                          ),
-                        }
+                      Util.makeActionDependIfUserLogedIn(
+                        context,
+                        _onAddProductToFavorites,
+                      ),
                     },
                     child: Icon(
                       dataProvider.favorites
@@ -185,5 +170,21 @@ class _ProductItemState extends State<ProductItem>
         ],
       ),
     );
+  }
+
+  _onAddProductToFavorites() {
+    var dataProvider = Provider.of<ProductProvider>(context, listen: false);
+    dataProvider.addProductToFavorites(widget.product);
+    if (favoriteAnimationControler.value == 1) {
+      favoriteAnimationControler.reverse();
+      ScaffoldMessenger.of(context).showSnackBar(
+        Util.snackBar("The item has been removed from favorites", context),
+      );
+    } else {
+      favoriteAnimationControler.forward();
+      ScaffoldMessenger.of(context).showSnackBar(
+        Util.snackBar("The item has been added to favorites", context),
+      );
+    }
   }
 }

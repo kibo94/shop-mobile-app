@@ -6,7 +6,7 @@ import 'package:my_app/pages/login_page.dart';
 import 'package:my_app/pages/profile_page.dart';
 import 'package:my_app/pages/register_page.dart';
 import 'package:my_app/pages/single_product_page.dart';
-import 'package:my_app/providers/products_provider.dart';
+import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +39,7 @@ Future<void> main() async {
 void run() => runApp(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => ProductsProvider()),
+          ChangeNotifierProvider(create: (context) => ProductProvider()),
           ChangeNotifierProvider(create: (context) => UserProvider()),
         ],
         child: MyApp(),
@@ -62,14 +62,14 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       onGenerateRoute: (settings) {
         var routes = {
-          LoginPage.routeName: (context) => const LoginPage(),
-          RegisterPage.routeName: (context) => const RegisterPage(),
-          ProfilePage.routeName: (context) => const ProfilePage(),
           MyHomePage.routeName: (context) {
             return const MyHomePage(
               title: "Home",
             );
           },
+          LoginPage.routeName: (context) => const LoginPage(),
+          RegisterPage.routeName: (context) => const RegisterPage(),
+          ProfilePage.routeName: (context) => const ProfilePage(),
           SingleProductPage.routeName: (context) {
             final args = settings.arguments as SingleProductArguments;
             return SingleProductPage(

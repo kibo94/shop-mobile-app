@@ -1,14 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:my_app/pages/home_page.dart';
 import 'package:my_app/pages/login_page.dart';
-import 'package:my_app/ui/loading_spinner.dart';
-import 'package:my_app/ui/login_form.dart';
-import 'package:http/http.dart' as http;
-
-var backendUrl = "https://shop-mobile-app-4.onrender.com";
-// var backendUrl = "https://192.168.0.103:4000";
+import 'package:my_app/providers/user_provider.dart';
+import 'package:my_app/ui/login_register_form.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -18,37 +12,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  String errorTxt = '';
   _register(String email, String password) async {
-    try {
-      await http.post(
-        Uri.parse(
-          '${backendUrl}/register',
-        ),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password,
-          // Add any other data you want to send in the body
-        }),
-      );
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: ((context) => const LoginPage())),
-      );
-
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      print(e);
-      setState(() {
-        isLoading = false;
-      });
-    }
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.registerTheUser(email, password, context);
   }
 
   bool isLoading = false;
@@ -81,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(
                   height: 40,
                 ),
-                LoginForm(
+                LoginRegisterForm(
                     buttonName: "Sign Up",
                     login: ((email, password, formKey) =>
                         _register(email, password))),
@@ -105,21 +71,21 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                 ),
                 if (isLoading) const CircularProgressIndicator(),
-                if (errorTxt.isNotEmpty)
-                  Column(
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        errorTxt,
-                        style: const TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                      ),
-                    ],
-                  )
+                // if (errorTxt.isNotEmpty)
+                //   Column(
+                //     children: [
+                //       const SizedBox(
+                //         height: 10,
+                //       ),
+                //       Text(
+                //         errorTxt,
+                //         style: const TextStyle(
+                //             color: Colors.red,
+                //             fontWeight: FontWeight.bold,
+                //             fontSize: 18),
+                //       ),
+                //     ],
+                //   )
               ],
             ),
           ),
