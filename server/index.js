@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import { initializeApp, applicationDefault } from "firebase-admin/app";
 import { getMessaging } from "firebase-admin/messaging"
 import fs from "fs"
@@ -120,54 +120,68 @@ let products = [
         "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
         "comments": []
     },
-    // {
-    //     "id": 0.2710531612825646,
-    //     "name": "mac book pro i6",
-    //     "author": "typicode223",
-    //     "type": "laptops",
-    //     "quantity": 0,
-    //     "price": 180000
-    // },
-    // {
-    //     "id": 0.5753682641423663,
-    //     "name": "Lenovo 123",
-    //     "author": "typicode223",
-    //     "type": "laptops",
-    //     "quantity": 0,
-    //     "price": 100000
-    // },
-    // {
-    //     "id": 1,
-    //     "name": "grasak",
-    //     "author": "typicode223",
-    //     "type": "vegetables",
-    //     "quantity": 0,
-    //     "price": 300
-    // },
-    // {
-    //     "id": 0.7193151800102087,
-    //     "name": "krompir",
-    //     "author": "typicode223",
-    //     "type": "vegetables",
-    //     "quantity": 0,
-    //     "price": 250
-    // },
-    // {
-    //     "id": 0.06581150853731477,
-    //     "name": "boranija",
-    //     "author": "typicode223",
-    //     "type": "vegetables",
-    //     "quantity": 0,
-    //     "price": 400
-    // },
-    // {
-    //     "id": 0.28139527398395026,
-    //     "name": "lubenicca",
-    //     "author": "typicode223",
-    //     "type": "vegetables",
-    //     "quantity": 0,
-    //     "price": 350
-    // }
+
+    {
+        "id": 8,
+        "name": "Lenovo 123",
+        "author": "typicode223",
+        "type": "laptops",
+        "details": "Dobra lubenica",
+        "quantity": 0,
+        "price": 35000,
+        "rating": 4,
+        "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
+        "comments": []
+    },
+    {
+        "id": 9,
+        "name": "grasak",
+        "author": "typicode223",
+        "type": "vegetables",
+        "details": "Dobra lubenica",
+        "quantity": 0,
+        "price": 35000,
+        "rating": 4,
+        "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
+        "comments": []
+    },
+    {
+        "id": 10,
+        "name": "krompir",
+        "author": "typicode223",
+        "type": "vegetables",
+        "details": "Dobra lubenica",
+        "quantity": 0,
+        "price": 35000,
+        "rating": 4,
+        "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
+        "comments": []
+    },
+    {
+        "id": 11,
+        "name": "boranija",
+        "author": "typicode223",
+        "type": "vegetables",
+        "details": "Dobra lubenica",
+        "quantity": 0,
+        "price": 35000,
+        "rating": 4,
+        "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
+        "comments": []
+    },
+    {
+        "id": 12,
+        "name": "lubenicca",
+        "author": "typicode223",
+        "type": "fruits",
+        "details": "Dobra lubenica",
+        "quantity": 0,
+        "price": 35000,
+        "rating": 4,
+        "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
+        "comments": []
+
+    }
 ]
 
 
@@ -182,11 +196,11 @@ app.use(cors({
 }))
 // });
 app.post('/createReceipt', (req, res) => {
-    var products = req.body.products;
+    var products = JSON.parse(req.body.products);
     var email = req.body.email
     var totalPrice = 0;
     products.forEach(prd => totalPrice += prd.price * prd.quantity)
-    console.log(products)
+
 
     var li = ""
     var table = ""
@@ -275,9 +289,10 @@ app.post('/createReceipt', (req, res) => {
         });
 
         console.log("Message sent: %s", info.messageId);
+
         // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
     }
-
+    res.status(200).json({ msg: "Receipt has been created" });
     main().catch(console.error);
 })
 
@@ -285,6 +300,12 @@ app.post('/createReceipt', (req, res) => {
 app.get('/', (req, res) => {
     console.log('hi form api')
     res.json({ 'name': "bojan" })
+
+})
+app.get('/filters', (req, res) => {
+    var filters = products.map((product) => product.type)
+
+    res.json(filters.filter((item, pos) => filters.indexOf(item) == pos));
 
 })
 
@@ -358,9 +379,5 @@ app.post('/comments', (req, res) => {
 // httpsServer.listen(port, (s) => console.log('port is live', port))
 
 
-const source = fs.createReadStream('example.receipt');
-const transform = receiptline.createTransform({ command: 'svg' });
-const destination = fs.createWriteStream('example.svg');
 
-source.pipe(transform).pipe(destination);
 app.listen(port);
