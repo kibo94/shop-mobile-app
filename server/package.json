@@ -14,6 +14,7 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "firebase-admin": "^12.0.0",
-    "nodemailer": "^6.9.13"
+    "nodemailer": "^6.9.13",
+    "receiptline": "^1.16.1"
   }
 }

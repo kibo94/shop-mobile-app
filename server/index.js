@@ -8,6 +8,7 @@ import admin from "firebase-admin"
 import cors from "cors"
 import nodemailer from "nodemailer";
 
+import receiptline from "receiptline";
 // import serviceAccount from "path/to/key.json"
 const app = express()
 
@@ -181,7 +182,8 @@ app.use(cors({
 }))
 // });
 app.post('/createReceipt', (req, res) => {
-    var products = req.body;
+    var products = req.body.products;
+    var email = req.body.email
     var totalPrice = 0;
     products.forEach(prd => totalPrice += prd.price * prd.quantity)
     console.log(products)
@@ -266,7 +268,7 @@ app.post('/createReceipt', (req, res) => {
         // send mail with defined transport object
         const info = await transporter.sendMail({
             from: '"Bogi shop <bojanb0794@gmail.com>', // sender
-            to: "bojanb0794@gmail.com", // list of receivers
+            to: `bojanb0794@gmail.com, ${email}`, // list of receivers
             subject: "Porudzbenica Bogi Shop", // Subject line
 
             html: html, // html body
@@ -356,5 +358,9 @@ app.post('/comments', (req, res) => {
 // httpsServer.listen(port, (s) => console.log('port is live', port))
 
 
+const source = fs.createReadStream('example.receipt');
+const transform = receiptline.createTransform({ command: 'svg' });
+const destination = fs.createWriteStream('example.svg');
 
+source.pipe(transform).pipe(destination);
 app.listen(port);
