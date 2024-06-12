@@ -1,14 +1,10 @@
 import express, { json } from "express";
-import { initializeApp, applicationDefault } from "firebase-admin/app";
-import { getMessaging } from "firebase-admin/messaging"
 import fs from "fs"
 import https from "https"
 import path from "path";
-import admin from "firebase-admin"
 import cors from "cors"
 import nodemailer from "nodemailer";
 
-import receiptline from "receiptline";
 // import serviceAccount from "path/to/key.json"
 const app = express()
 
@@ -36,6 +32,7 @@ let products = [
         "author": "typicode223",
         "type": "fruits",
         "price": 300,
+        "onStack": true,
         "quantity": 0,
         "details": "Jako lepo voce i zdravo",
         "rating": 4,
@@ -70,6 +67,7 @@ let products = [
         "type": "fruits",
         "quantity": 0,
         "details": "Jako lepo voce i zdravo, i",
+        "onStack": true,
         "price": 200,
         "rating": 3,
         "comments": []
@@ -82,6 +80,7 @@ let products = [
         "type": "fruits",
         "details": "Jako lepo voce i zdravo, i",
         "quantity": 0,
+        "onStack": true,
         "price": 400,
         "rating": 5,
         "comments": []
@@ -94,6 +93,7 @@ let products = [
         "quantity": 0,
         "details": "Jako lepo voce i zdravo i dobo za kompot",
         "price": 500,
+        "onStack": true,
         "rating": 3,
         "comments": []
     },
@@ -106,6 +106,7 @@ let products = [
         "details": "Jako dobar laptop, brz, pouzdan....",
         "price": 30000,
         "rating": 5,
+        "onStack": true,
         "comments": []
     },
     {
@@ -116,6 +117,7 @@ let products = [
         "details": "Jako dobar laptop, brz, pouzdan i od kvalitetne plastike izradjen....",
         "quantity": 0,
         "price": 35000,
+        "onStack": true,
         "rating": 4,
         "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
         "comments": []
@@ -129,6 +131,7 @@ let products = [
         "details": "Dobra lubenica",
         "quantity": 0,
         "price": 35000,
+        "onStack": true,
         "rating": 4,
         "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
         "comments": []
@@ -141,51 +144,12 @@ let products = [
         "details": "Dobra lubenica",
         "quantity": 0,
         "price": 35000,
+        "onStack": true,
         "rating": 4,
         "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
         "comments": []
     },
-    {
-        "id": 10,
-        "name": "krompir",
-        "author": "typicode223",
-        "type": "vegetables",
-        "details": "Dobra lubenica",
-        "quantity": 0,
-        "price": 35000,
-        "rating": 4,
-        "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
-        "comments": []
-    },
-    {
-        "id": 11,
-        "name": "boranija",
-        "author": "typicode223",
-        "type": "vegetables",
-        "details": "Dobra lubenica",
-        "quantity": 0,
-        "price": 35000,
-        "rating": 4,
-        "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
-        "comments": []
-    },
-    {
-        "id": 12,
-        "name": "lubenicca",
-        "author": "typicode223",
-        "type": "fruits",
-        "details": "Dobra lubenica",
-        "quantity": 0,
-        "price": 35000,
-        "rating": 4,
-        "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
-        "comments": []
-
-    }
 ]
-
-
-
 
 app.use(express.json())
 app.use(cors({
@@ -200,9 +164,6 @@ app.post('/createReceipt', (req, res) => {
     var email = req.body.email
     var totalPrice = 0;
     products.forEach(prd => totalPrice += prd.price * prd.quantity)
-
-
-    var li = ""
     var table = ""
     table += `<table  style="          font-family: arial, sans-serif;
     border-collapse: collapse;
@@ -221,11 +182,7 @@ app.post('/createReceipt', (req, res) => {
     text-align: left;
     padding: 8px;">Ukupno</th>
 </tr>
-    
     `
-
-
-
     products.forEach(product => {
 
         table += `
@@ -256,7 +213,6 @@ app.post('/createReceipt', (req, res) => {
     padding: 8px;">${totalPrice} din</td>
 </tr>`
     table += '</table>'
-
     var html = `<div style="width: 100%;">
     <div style="width:300px;  position: relative; left: 50%; transform: translateX(-50%); text-align: center;  box-shadow: rr ">
     <h1 style="margin-bottom: 40px;">BOGI SHOP</h1>
@@ -275,8 +231,6 @@ app.post('/createReceipt', (req, res) => {
             pass: "hixrjsyerfvhwkif",
         },
     });
-
-
     // async..await is not allowed in global scope, must use a wrapper
     async function main() {
         // send mail with defined transport object
@@ -300,6 +254,16 @@ app.post('/createReceipt', (req, res) => {
 app.get('/', (req, res) => {
     console.log('hi form api')
     res.json({ 'name': "bojan" })
+
+});
+
+app.get('/search', (req, res) => {
+    var text = req.query.text;
+    var searchedPrds = products
+        .filter(product => product.name.toLocaleLowerCase()
+            .includes(text.toLowerCase()));
+    console.log(searchedPrds)
+    res.json(searchedPrds);
 
 })
 app.get('/filters', (req, res) => {
@@ -327,14 +291,10 @@ app.post('/login', async (req, res) => {
         console.log(error.message)
         res.status(404).json({ success: false, error: error.message });
     }
-
-
 })
 
 app.post('/register', async (req, res) => {
     let user = users.find(user => user.email == req.body.email)
-
-
     try {
         if (user) throw new Error('User not exists');
         users.push({ email: req.body.email, password: req.body.password });
@@ -343,15 +303,11 @@ app.post('/register', async (req, res) => {
         console.log("catch triggereddd")
         res.status(404).json({ success: false, error: error.message });
     }
-
-
 })
 app.put('/filterProducts', (req, res) => {
     const prodType = req.body.type.toLowerCase();
     const filteredProducts = prodType == "all" ? products : products.filter(prod => prod.type == prodType);
-    console.log(filteredProducts);
     res.json(filteredProducts);
-
 })
 app.post('/comments', (req, res) => {
     let id = req.body.id;
@@ -364,17 +320,14 @@ app.post('/comments', (req, res) => {
         }
         return prodcut;
     });
-    console.log(products);
     res.json(products);
 
 })
 
-
-
-// const httpsServer = https.createServer({
-//     key: fs.readFileSync(path.join("cert", "key.pem")),
-//     cert: fs.readFileSync(path.join("cert", "cert.pem"))
-// }, app);
+const httpsServer = https.createServer({
+    key: fs.readFileSync(path.join("cert", "key.pem")),
+    cert: fs.readFileSync(path.join("cert", "cert.pem"))
+}, app);
 
 // httpsServer.listen(port, (s) => console.log('port is live', port))
 
