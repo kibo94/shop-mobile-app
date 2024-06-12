@@ -23,122 +23,127 @@ class _HeaderState extends State<Header> {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.only(right: 20, left: 22),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          GestureDetector(
-            onTap: () => widget.globalKey.currentState!.openDrawer(),
-            child: SvgPicture.asset(
-              'assets/images/menu.svg',
-              height: 15,
-              width: 10,
-              color: shopAction,
-            ),
-          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Stack(
+              GestureDetector(
+                onTap: () => widget.globalKey.currentState!.openDrawer(),
+                child: SvgPicture.asset(
+                  'assets/images/menu.svg',
+                  height: 15,
+                  width: 10,
+                  color: shopAction,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Stack(
+                    children: [
+                      GestureDetector(
+                        onTap: () => {
+                          Util.makeActionDependIfUserLogedIn(
+                              context,
+                              () => {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: ((context) =>
+                                            const FavoritesPage()),
+                                      ),
+                                    )
+                                  })
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                              right: 25, top: 16, bottom: 16),
+                          child: const Icon(
+                            Icons.favorite_border_outlined,
+                            color: shopAction,
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 15,
+                        right: 20,
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 17,
+                          height: 17,
+                          decoration: BoxDecoration(
+                              color: shopAction,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Text(
+                            data.favorites.length.toString(),
+                            style:
+                                const TextStyle(color: Colors.white, height: 1),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   GestureDetector(
                     onTap: () => {
-                      Util.makeActionDependIfUserLogedIn(
-                          context,
-                          () => {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: ((context) =>
-                                        const FavoritesPage()),
-                                  ),
-                                )
-                              })
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: ((context) => const CartPage()),
+                        ),
+                      )
                     },
-                    child: Container(
-                      padding:
-                          const EdgeInsets.only(right: 25, top: 16, bottom: 16),
-                      child: const Icon(
-                        Icons.favorite_border_outlined,
-                        color: shopAction,
-                        size: 30,
-                      ),
+                    child: Stack(
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                right: 25, top: 20, bottom: 16),
+                            child: SvgPicture.asset(
+                              'assets/images/cart.svg',
+                              color: shopAction,
+                            )),
+                        Positioned(
+                          top: 15,
+                          right: 20,
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 17,
+                            height: 17,
+                            decoration: BoxDecoration(
+                                color: shopAction,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Text(
+                              data.cart.length.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                height: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Positioned(
-                    top: 15,
-                    right: 20,
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 17,
-                      height: 17,
-                      decoration: BoxDecoration(
-                          color: shopAction,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Text(
-                        data.favorites.length.toString(),
-                        style: const TextStyle(color: Colors.white, height: 1),
+                  GestureDetector(
+                    onTap: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: ((context) => const ProfilePage()),
+                        ),
+                      )
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16, bottom: 16),
+                      child: SvgPicture.asset(
+                        'assets/images/user.svg',
+                        height: 25,
+                        color: shopAction,
                       ),
                     ),
                   ),
                 ],
-              ),
-              GestureDetector(
-                onTap: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: ((context) => const CartPage()),
-                    ),
-                  )
-                },
-                child: Stack(
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            right: 25, top: 20, bottom: 16),
-                        child: SvgPicture.asset(
-                          'assets/images/cart.svg',
-                          color: shopAction,
-                        )),
-                    Positioned(
-                      top: 15,
-                      right: 20,
-                      child: Container(
-                        alignment: Alignment.center,
-                        width: 17,
-                        height: 17,
-                        decoration: BoxDecoration(
-                            color: shopAction,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Text(
-                          data.cart.length.toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            height: 1,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: ((context) => const ProfilePage()),
-                    ),
-                  )
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16, bottom: 16),
-                  child: SvgPicture.asset(
-                    'assets/images/user.svg',
-                    height: 25,
-                    color: shopAction,
-                  ),
-                ),
               ),
             ],
           ),

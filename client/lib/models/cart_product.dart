@@ -13,6 +13,7 @@ class CartProductModel {
   int rating;
   bool inCart;
   bool isLiked;
+  final bool onStack;
   String? imgUrl;
   List<Comment>? comments;
 
@@ -26,6 +27,7 @@ class CartProductModel {
       required this.isLiked,
       required this.details,
       required this.rating,
+      required this.onStack,
       this.comments,
       this.imgUrl,
       required this.quantity});
@@ -34,6 +36,7 @@ class CartProductModel {
       'id': id,
       'name': name,
       'quantity': quantity,
+      'onStack': onStack,
       'price': price,
       'type': type,
       'inCart': inCart,

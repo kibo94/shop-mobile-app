@@ -111,6 +111,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
                         '${widget.product.price.toString()} \din',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
+                      // if (widget.product.onStack)
                       GestureDetector(
                           onTap: () => {
                                 dataProvider.setProduct(
@@ -124,6 +125,29 @@ class _SingleProductPageState extends State<SingleProductPage> {
                             width: 30,
                             height: 30,
                           )),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 27,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 9,
+                        height: 9,
+                        decoration: BoxDecoration(
+                            color: widget.product.onStack
+                                ? const Color.fromRGBO(48, 231, 99, 1)
+                                : Colors.red,
+                            borderRadius: BorderRadius.circular(50)),
+                      ),
+                      const SizedBox(
+                        width: 9.5,
+                      ),
+                      Text(
+                        widget.product.onStack ? "On Stack" : "Off stack",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      )
                     ],
                   ),
                   const SizedBox(

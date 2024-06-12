@@ -53,6 +53,7 @@ class Util {
         isLiked: product.isLiked,
         details: product.details,
         rating: product.rating,
+        onStack: product.onStack,
         quantity: quantity);
     return cartProduct;
   }

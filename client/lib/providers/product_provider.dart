@@ -22,8 +22,8 @@ class ProductProvider extends ChangeNotifier {
   List<String> get filters => _filters;
   List<CartProductModel> get cart => _cart;
   bool isLoadingProducts = false;
-  var backendUrl = "https://shop-mobile-app-4.onrender.com";
-  // var backendUrl = "https://192.168.0.103:4000";
+  // var backendUrl = "https://shop-mobile-app-4.onrender.com";
+  var backendUrl = "https://192.168.0.103:4000";
   setProduct(int? product) {
     selectedProduct = product;
     notifyListeners();
@@ -42,6 +42,21 @@ class ProductProvider extends ChangeNotifier {
         list.map((e) => e),
       );
       _filters = filters;
+      notifyListeners();
+    } catch (e) {}
+  }
+
+  searchProducts(String text) async {
+    print(11);
+    try {
+      var data = await http.get(
+        Uri.parse('$backendUrl/search?text=$text'),
+      );
+      Iterable list = await json.decode(data.body);
+      var products = List<Product>.from(
+        list.map((e) => Product.fromJson(e)),
+      );
+      _products = products;
       notifyListeners();
     } catch (e) {}
   }

@@ -16,7 +16,7 @@ const headerShadowColor = Color.fromRGBO(173, 163, 163, 0.25);
 
 ThemeData shopTheme = ThemeData(
     appBarTheme: const AppBarTheme(
-      toolbarHeight: 60,
+      toolbarHeight: 62,
       shadowColor: headerShadowColor,
     ),
     brightness: Brightness.light,

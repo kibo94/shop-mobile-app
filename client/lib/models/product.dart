@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:my_app/models/comment.dart';
 
 class Product {
@@ -9,6 +10,7 @@ class Product {
   final String? type;
   final String author;
   final String details;
+  final bool onStack;
   int rating;
   bool inCart;
   bool isLiked;
@@ -25,6 +27,7 @@ class Product {
     required this.isLiked,
     required this.details,
     required this.rating,
+    required this.onStack,
     this.comments,
     this.imgUrl,
   });
@@ -41,6 +44,7 @@ class Product {
         author: json['author'],
         name: json['name'],
         price: json['price'],
+        onStack: json['onStack'] ?? false,
         inCart: json['inCart'] ?? false,
         isLiked: json['isLiked'] ?? false,
         details: json['details'],

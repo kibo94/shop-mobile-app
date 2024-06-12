@@ -12,6 +12,7 @@ import 'package:my_app/ui/product_filters.dart';
 import 'package:my_app/ui/header.dart';
 import 'package:my_app/ui/loading_spinner.dart';
 import 'package:my_app/ui/products.dart';
+import 'package:my_app/ui/search_products.dart';
 import 'package:my_app/ui/side_bar.dart';
 import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
@@ -66,7 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
-          leadingWidth: 50,
           actions: [
             Header(
               globalKey: _key,
@@ -86,6 +86,10 @@ class _MyHomePageState extends State<MyHomePage> {
           child: userProvider.isUserOnline
               ? Column(
                   children: [
+                    const SizedBox(
+                      height: 26,
+                    ),
+                    SearchProducts(),
                     const SizedBox(
                       height: 26,
                     ),

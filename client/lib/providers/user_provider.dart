@@ -11,9 +11,9 @@ import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
 
-var backendUrl = "https://shop-mobile-app-4.onrender.com";
+// var backendUrl = "https://shop-mobile-app-4.onrender.com";
 
-// var backendUrl = "https://192.168.0.103:4000";
+var backendUrl = "https://192.168.0.103:4000";
 
 class UserProvider extends ChangeNotifier {
   User? user;
