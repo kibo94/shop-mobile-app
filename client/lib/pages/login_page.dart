@@ -39,73 +39,78 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          height: MediaQuery.of(context).size.height,
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 40,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text("Log in",
-                    textAlign: TextAlign.left,
-                    style: Theme.of(context).textTheme.headline1),
-                const SizedBox(
-                  height: 48,
-                ),
-                LoginRegisterForm(
-                    buttonName: 'Sign in',
-                    login: ((email, password, formKey) =>
-                        _login(email, password, formKey))),
-                const SizedBox(
-                  height: 25,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Do you hava a account?',
-                      style: TextStyle(color: Color.fromRGBO(91, 91, 91, 1)),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    GestureDetector(
-                      onTap: () => _signUp(),
-                      child: const Text('Sign up'),
-                    )
-                  ],
-                ),
-                if (isLoading)
-                  const CircularProgressIndicator(
-                    color: shopBlack,
+    return Consumer<UserProvider>(builder: (context, userProvider, child) {
+      return Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            height: MediaQuery.of(context).size.height,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 40,
                   ),
-                if (errorMessage.isNotEmpty)
-                  Text(
-                    errorMessage,
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 225, 47, 47),
-                        fontWeight: FontWeight.w600),
-                  )
-              ],
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text("Log in",
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.headlineLarge),
+                  const SizedBox(
+                    height: 48,
+                  ),
+                  LoginRegisterForm(
+                      buttonName: 'Sign in',
+                      login: ((email, password, formKey) =>
+                          _login(email, password, formKey))),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  if (userProvider.errorMessage.isNotEmpty)
+                    Text(
+                      userProvider.errorMessage,
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 225, 47, 47),
+                          fontWeight: FontWeight.w600),
+                    ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Do you hava a account?',
+                        style: TextStyle(color: Color.fromRGBO(91, 91, 91, 1)),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      GestureDetector(
+                        onTap: () => _signUp(userProvider),
+                        child: const Text('Sign up'),
+                      )
+                    ],
+                  ),
+                  if (isLoading)
+                    const CircularProgressIndicator(
+                      color: shopAction,
+                    ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  _signUp() {
+  _signUp(UserProvider userProvider) {
+    userProvider.errorMessage = "";
     Navigator.push(
       context,
       MaterialPageRoute(

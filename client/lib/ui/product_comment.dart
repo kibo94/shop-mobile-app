@@ -14,19 +14,9 @@ class ProductComment extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 20, top: 15),
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
-            BoxShadow(
-              blurRadius: 4,
-              color: Color.fromRGBO(
-                0,
-                0,
-                0,
-                0.25,
-              ),
-            ),
-          ]),
+        color: shopSecondary,
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Stack(
         children: [
           Padding(
@@ -46,7 +36,7 @@ class ProductComment extends StatelessWidget {
                     comment.comment,
                     style: const TextStyle(
                       fontSize: 18,
-                      color: shopGrey1,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -60,7 +50,7 @@ class ProductComment extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 decoration: BoxDecoration(
-                  color: shopBlack,
+                  color: shopAction,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Row(
@@ -69,7 +59,7 @@ class ProductComment extends StatelessWidget {
                       comment.rating.toString(),
                       style: Theme.of(context)
                           .textTheme
-                          .headline3
+                          .headlineSmall
                           ?.copyWith(color: Colors.white),
                     ),
                     const SizedBox(

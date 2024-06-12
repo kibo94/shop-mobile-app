@@ -6,10 +6,12 @@ import 'package:my_app/models/product.dart';
 import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/add_to_cart.dart';
+import 'package:my_app/ui/container.dart';
 import 'package:my_app/ui/product_comments.dart';
 import 'package:my_app/ui/product_rating.dart';
 import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/ui/header.dart';
+import 'package:my_app/ui/side_bar.dart';
 import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
 
@@ -29,29 +31,31 @@ class SingleProductPage extends StatefulWidget {
 
 class _SingleProductPageState extends State<SingleProductPage> {
   TextEditingController controller = TextEditingController();
-
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); // Cr
   @override
   Widget build(BuildContext context) {
     var dataProvider = Provider.of<ProductProvider>(context, listen: true);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      key: _key,
       extendBody: false,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        actions: const [
-          Header(),
+        actions: [
+          Header(
+            globalKey: _key,
+          ),
         ],
       ),
+      drawer: SideBar(barKey: _key),
       bottomNavigationBar: dataProvider.selectedProduct != null
           ? AddToCart(
               productName: widget.product.name,
             )
           : null,
       body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 30),
+        child: ShopContainer(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -60,7 +64,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
               ),
               Text(
                 widget.product.name.toUpperCase(),
-                style: Theme.of(context).textTheme.headline2,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(
                 height: 10,
@@ -105,7 +109,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
                     children: [
                       Text(
                         '${widget.product.price.toString()} \din',
-                        style: Theme.of(context).textTheme.headline2,
+                        style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       GestureDetector(
                           onTap: () => {
@@ -116,7 +120,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
                               },
                           child: SvgPicture.asset(
                             'assets/images/cart.svg',
-                            color: Colors.black,
+                            color: shopAction,
                             width: 30,
                             height: 30,
                           )),
@@ -131,7 +135,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
                     children: [
                       Text(
                         "Description",
-                        style: Theme.of(context).textTheme.headline3,
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const SizedBox(
                         height: 10,
@@ -139,7 +143,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
                       Text(
                         widget.product.details,
                         style: const TextStyle(
-                          color: shopGrey1,
+                          color: Colors.black,
                           fontSize: 18,
                         ),
                       )
@@ -150,7 +154,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
                   ),
                   Text(
                     "Comments",
-                    style: Theme.of(context).textTheme.headline3,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SizedBox(
                     height: 22,
@@ -167,7 +171,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
                                 child: Container(
                                   padding: const EdgeInsets.only(left: 17),
                                   decoration: BoxDecoration(
-                                      color: shopGrey2,
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(5)),
                                   child: TextFormField(
                                     controller: controller,
@@ -196,7 +200,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
                                 child: Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color: Colors.black,
+                                    color: shopAction,
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: const Text(

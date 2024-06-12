@@ -16,18 +16,12 @@ class AddToCart extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       height: 180,
       decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(15),
-            topLeft: Radius.circular(15),
-          ),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, -1),
-              blurRadius: 4,
-              color: Color.fromRGBO(0, 0, 0, 0.25),
-            )
-          ]),
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(15),
+          topLeft: Radius.circular(15),
+        ),
+      ),
       child: Stack(
         children: [
           Column(
@@ -51,7 +45,7 @@ class AddToCart extends StatelessWidget {
                       // width: 250,
                       child: Text(
                         productName,
-                        style: Theme.of(context).textTheme.headline3,
+                        style: Theme.of(context).textTheme.headlineSmall,
                         textAlign: TextAlign.center,
                       ),
                     )
@@ -64,7 +58,7 @@ class AddToCart extends StatelessWidget {
                   Container(
                     alignment: Alignment.center,
                     width: MediaQuery.of(context).size.width / 2,
-                    color: shopGrey2,
+                    color: shopPrimary,
                     height: 65,
                     child: QuantityUpdate(
                       quantity: data.quantity,
@@ -92,11 +86,14 @@ class AddToCart extends StatelessWidget {
                     child: Container(
                       alignment: Alignment.center,
                       width: MediaQuery.of(context).size.width / 2,
-                      color: shopBlack,
+                      color: shopAction,
                       height: 65,
                       child: Text(
                         "Add to cart",
-                        style: Theme.of(context).textTheme.headline2?.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
                               color: Colors.white,
                             ),
                       ),

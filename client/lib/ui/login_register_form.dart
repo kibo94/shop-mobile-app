@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/button.dart';
+import 'package:provider/provider.dart';
 
 class LoginRegisterForm extends StatefulWidget {
   const LoginRegisterForm(
@@ -20,6 +22,7 @@ class _LoginRegisterFormState extends State<LoginRegisterForm> {
   String passwordErrText = '';
   @override
   Widget build(BuildContext context) {
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
     return Form(
       key: _formKey,
       child: Column(
@@ -57,15 +60,7 @@ class _LoginRegisterFormState extends State<LoginRegisterForm> {
                 // ),
               ),
               controller: emailController,
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  setState(() {
-                    emailErrText = "Please enter some email";
-                  });
-                  return 'Please enter some email';
-                }
-                return null;
-              },
+              onChanged: (value) => {userProvider.validateUserEmail(value)},
             ),
           ),
           const SizedBox(
@@ -109,8 +104,10 @@ class _LoginRegisterFormState extends State<LoginRegisterForm> {
           //   height: 48,
           // ),
           ActionButton(
-            onDone: () => widget.login(
-                emailController.text, passwordController.text, _formKey)!,
+            onDone: () => userProvider.errorMessage.isNotEmpty
+                ? null
+                : widget.login(
+                    emailController.text, passwordController.text, _formKey)!,
             btnName: widget.buttonName,
           )
         ],
@@ -122,17 +119,9 @@ class _LoginRegisterFormState extends State<LoginRegisterForm> {
     return Container(
       padding: const EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          boxShadow: const [
-            BoxShadow(
-                color: Color.fromRGBO(120, 137, 142, 0.25),
-                offset: Offset(0, 1),
-                blurRadius: 4,
-                spreadRadius: 2),
-          ]
-          // boxShadow: [BoxShadow(color: Color.fromARGB(255, 75, 47, 47))],
-          ),
+        borderRadius: BorderRadius.circular(10),
+        color: shopSecondary,
+      ),
       child: child,
     );
   }

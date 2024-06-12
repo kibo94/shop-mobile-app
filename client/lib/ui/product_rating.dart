@@ -19,7 +19,7 @@ class Rating extends StatelessWidget {
             padding: const EdgeInsets.only(right: 9),
             child: SvgPicture.asset(
               "assets/images/star.svg",
-              color: const Color.fromRGBO(251, 244, 74, 1),
+              color: Color.fromARGB(255, 210, 203, 20),
             ),
           ),
         );

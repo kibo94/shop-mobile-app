@@ -1,9 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/providers/product_provider.dart';
+import 'package:my_app/style/theme.dart';
+import 'package:my_app/ui/button.dart';
+import 'package:provider/provider.dart';
 
 class Filters extends StatefulWidget {
-  const Filters({super.key, required this.filterItem});
+  const Filters(
+      {super.key, required this.filterItem, required this.reloadPage});
   final Function(String name) filterItem;
+  final Function reloadPage;
 
   @override
   State<Filters> createState() => _FiltersState();
@@ -13,19 +19,24 @@ class _FiltersState extends State<Filters> {
   String type = "All";
   @override
   Widget build(BuildContext context) {
+    var productProvider = Provider.of<ProductProvider>(context, listen: false);
     return SingleChildScrollView(
         dragStartBehavior: DragStartBehavior.start,
         scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Make api for geting a filters
-            _filter('All', widget.filterItem),
-            _filter('Fruits', widget.filterItem),
-            _filter('Laptops', widget.filterItem),
-            _filter('Vegetables', widget.filterItem),
-          ],
-        ));
+        child: productProvider.filters.isNotEmpty
+            ? Row(children: [
+                _filter('All', widget.filterItem),
+                ...productProvider.filters
+                    .map((filter) => _filter(
+                          filter,
+                          widget.filterItem,
+                        ))
+                    .toList()
+              ]
+
+                // Make api for geting a fil
+                )
+            : null);
   }
 
   GestureDetector _filter(String name, Function filterItem) {
@@ -39,21 +50,26 @@ class _FiltersState extends State<Filters> {
         })
       },
       child: Container(
+        height: 32,
+        alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(
-          vertical: 5,
           horizontal: 10,
         ),
-        margin: const EdgeInsets.only(left: 20),
+        margin: const EdgeInsets.only(right: 15),
         decoration: BoxDecoration(
-          color: type == name
-              ? Colors.black
-              : const Color.fromRGBO(82, 82, 82, 0.21),
-          borderRadius: BorderRadius.circular(5),
-        ),
+            color: type == name ? shopAction : Colors.white,
+            borderRadius: BorderRadius.circular(5),
+            border: type != name
+                ? Border.all(
+                    width: 1,
+                    color: Colors.black,
+                  )
+                : null),
         child: Text(
           name,
-          style: Theme.of(context).textTheme.headline2?.copyWith(
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: type == name ? Colors.white : Colors.black,
+                fontSize: 22,
               ),
         ),
       ),

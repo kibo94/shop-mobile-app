@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/add_to_cart.dart';
+import 'package:my_app/ui/container.dart';
 import 'package:my_app/ui/header.dart';
 import 'package:my_app/ui/products.dart';
 import 'package:my_app/ui/side_bar.dart';
@@ -23,7 +24,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
     var data = Provider.of<ProductProvider>(context, listen: true);
     return Scaffold(
       key: _key, // A
-      backgroundColor: Colors.white,
+
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
@@ -32,11 +33,13 @@ class _FavoritesPageState extends State<FavoritesPage> {
           child: SvgPicture.asset(
             'assets/images/menu.svg',
             width: 26,
-            color: shopBlack,
+            color: shopAction,
           ),
         ),
-        actions: const [
-          Header(),
+        actions: [
+          Header(
+            globalKey: _key,
+          ),
         ],
       ),
       drawer: SideBar(barKey: _key),
@@ -47,23 +50,26 @@ class _FavoritesPageState extends State<FavoritesPage> {
                   .name,
             )
           : null,
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 50,
-            ),
-            Text("Favorites", style: Theme.of(context).textTheme.headline1),
-            const SizedBox(
-              height: 41,
-            ),
-            data.favorites.isNotEmpty
-                ? Products(
-                    products: data.favorites,
-                  )
-                : Text("No favorites")
-          ],
+      body: ShopContainer(
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 30,
+              ),
+              Text("Favorites",
+                  style: Theme.of(context).textTheme.headlineLarge),
+              const SizedBox(
+                height: 36,
+              ),
+              data.favorites.isNotEmpty
+                  ? Products(
+                      products: data.favorites,
+                    )
+                  : Text("No favorites")
+            ],
+          ),
         ),
       ),
     );

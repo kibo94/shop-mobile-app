@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_app/pages/cart_page.dart';
 import 'package:my_app/pages/favorites_page.dart';
 import 'package:my_app/pages/home_page.dart';
@@ -28,7 +29,7 @@ class SideBar extends StatelessWidget {
                   onTap: () => Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: ((context) => const MyHomePage(title: "ss")),
+                      builder: ((context) => const MyHomePage()),
                     ),
                   ),
                   child: const Text(
@@ -78,15 +79,13 @@ class SideBar extends StatelessWidget {
         ),
         Positioned(
           left: 20,
-          top: 20,
+          top: 45,
           child: GestureDetector(
-            onTap: () => barKey.currentState!.closeDrawer(),
-            child: const Icon(
-              Icons.close,
-              color: shopBlack,
-              size: 35,
-            ),
-          ),
+              onTap: () => barKey.currentState!.closeDrawer(),
+              child: SvgPicture.asset(
+                'assets/images/close-side.svg',
+                color: shopAction,
+              )),
         ),
       ],
     );

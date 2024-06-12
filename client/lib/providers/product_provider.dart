@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:my_app/models/cart_product.dart';
 import 'package:my_app/models/comment.dart';
 import 'package:my_app/models/product.dart';
@@ -12,10 +14,12 @@ class ProductProvider extends ChangeNotifier {
   List<Product> _products = [];
   int? selectedProduct;
   int quantity = 1;
-  final List<CartProductModel> _cart = [];
+  List<CartProductModel> _cart = [];
+  List<String> _filters = [];
   final List<Product> _favorites = [];
   List<Product> get products => _products;
   List<Product> get favorites => _favorites;
+  List<String> get filters => _filters;
   List<CartProductModel> get cart => _cart;
   bool isLoadingProducts = false;
   var backendUrl = "https://shop-mobile-app-4.onrender.com";
@@ -25,16 +29,42 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  fetchProducts() async {
-    isLoadingProducts = true;
-    var data = await http.get(Uri.parse('$backendUrl/products'));
-    Iterable list = await json.decode(data.body);
-    var products = List<Product>.from(
-      list.map((e) => Product.fromJson(e)),
-    );
-    _products = products;
-    isLoadingProducts = false;
+  resetCart() {
+    _cart = [];
     notifyListeners();
+  }
+
+  fetchFilters() async {
+    try {
+      var data = await http.get(Uri.parse('$backendUrl/filters'));
+      Iterable list = await json.decode(data.body);
+      var filters = List<String>.from(
+        list.map((e) => e),
+      );
+      _filters = filters;
+      notifyListeners();
+    } catch (e) {}
+  }
+
+  fetchProducts(BuildContext context) async {
+    isLoadingProducts = true;
+
+    try {
+      var data = await http.get(Uri.parse('$backendUrl/products'));
+      Iterable list = await json.decode(data.body);
+      var products = List<Product>.from(
+        list.map((e) => Product.fromJson(e)),
+      );
+      _products = products;
+      isLoadingProducts = false;
+      notifyListeners();
+    } on SocketException catch (platformError) {
+      if (platformError.message ==
+          "Failed host lookup: 'shop-mobile-app-4.onrender.com'") {
+        isLoadingProducts = false;
+        notifyListeners();
+      }
+    } catch (e) {}
   }
 
   filterProducts(String name) async {
@@ -77,9 +107,10 @@ class ProductProvider extends ChangeNotifier {
     product.isLiked = !product.isLiked;
     if (_favorites.where((favEl) => favEl.id == product.id).isEmpty) {
       _favorites.add(product);
-      return;
+    } else {
+      _favorites.removeWhere((favorite) => favorite.id == product.id);
     }
-    _favorites.removeWhere((favorite) => favorite.id == product.id);
+
     notifyListeners();
   }
 

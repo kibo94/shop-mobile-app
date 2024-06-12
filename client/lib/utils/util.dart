@@ -3,14 +3,15 @@ import 'package:my_app/models/product.dart';
 import "package:flutter/material.dart";
 import 'package:my_app/pages/login_page.dart';
 import 'package:my_app/providers/user_provider.dart';
+import 'package:my_app/style/theme.dart';
 import 'package:provider/provider.dart';
 
 class Util {
   static int getTotalInCart(List<CartProductModel> products) {
     int sum = 0;
-    products.forEach((product) {
+    for (var product in products) {
       sum = sum + (product.price * product.quantity);
-    });
+    }
 
     return sum;
   }
@@ -26,15 +27,15 @@ class Util {
     return (sum / product.comments!.length).floor();
   }
 
-  static SnackBar snackBar(String msg, BuildContext ctx) {
+  static SnackBar snackBar(String msg, BuildContext ctx, {Color? color}) {
     return SnackBar(
-      backgroundColor: Colors.black,
+      backgroundColor: color ?? shopAction,
       padding: const EdgeInsets.symmetric(vertical: 23),
       duration: const Duration(seconds: 1),
       content: Text(
         msg,
         textAlign: TextAlign.center,
-        style: Theme.of(ctx).textTheme.headline3?.copyWith(
+        style: Theme.of(ctx).textTheme.headlineSmall?.copyWith(
               color: Colors.white,
             ),
       ),

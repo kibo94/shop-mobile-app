@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_app/models/cart_product.dart';
 import 'package:my_app/providers/product_provider.dart';
+import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/product_quantity_update.dart';
 import 'package:provider/provider.dart';
 
@@ -23,15 +24,7 @@ class _CartProductState extends State<CartProduct> {
       padding: const EdgeInsets.only(top: 20, bottom: 0, left: 19),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.white,
-        boxShadow: const [
-          BoxShadow(
-            offset: Offset(0, 0),
-            blurRadius: 2,
-            spreadRadius: 0,
-            color: Color.fromRGBO(23, 22, 22, 0.22),
-          )
-        ],
+        color: shopSecondary,
       ),
       child: Stack(
         children: [
@@ -60,12 +53,12 @@ class _CartProductState extends State<CartProduct> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(widget.product.name.toUpperCase(),
-                          style: Theme.of(context).textTheme.headline3),
+                          style: Theme.of(context).textTheme.headlineSmall),
                       const SizedBox(
                         height: 4,
                       ),
                       Text("Black",
-                          style: Theme.of(context).textTheme.subtitle2),
+                          style: Theme.of(context).textTheme.titleSmall),
                       const SizedBox(
                         height: 12,
                       ),
@@ -76,7 +69,7 @@ class _CartProductState extends State<CartProduct> {
                             color: const Color.fromRGBO(182, 176, 176, 0.13)),
                         child: Text(
                           widget.product.type!,
-                          style: Theme.of(context).textTheme.caption,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ),
                     ],
@@ -121,6 +114,7 @@ class _CartProductState extends State<CartProduct> {
               onTap: () => dataProvider.removeProductFromCart(widget.product),
               child: SvgPicture.asset(
                 'assets/images/remove_bin.svg',
+                color: shopAction,
                 height: 23,
               ),
             ),

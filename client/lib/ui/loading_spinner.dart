@@ -32,7 +32,7 @@ class _LoadingSpinnerState extends State<LoadingSpinner>
   @override
   Widget build(BuildContext context) {
     return CircularProgressIndicator(
-      color: shopBlack,
+      color: shopAction,
       value: controller.value,
       semanticsLabel: 'Circular progress indicator',
     );

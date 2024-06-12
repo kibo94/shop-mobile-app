@@ -22,79 +22,94 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          height: MediaQuery.of(context).size.height,
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 40,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "Create your account",
-                  style: Theme.of(context).textTheme.headline1,
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                LoginRegisterForm(
-                    buttonName: "Sign Up",
-                    login: ((email, password, formKey) =>
-                        _register(email, password))),
-                const SizedBox(
-                  height: 45,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Already hava a account?',
-                      style: TextStyle(color: Color.fromRGBO(91, 91, 91, 1)),
+    return Consumer<UserProvider>(builder: (context, userProvider, child) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            height: MediaQuery.of(context).size.height,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Create your account",
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  LoginRegisterForm(
+                      buttonName: "Sign Up",
+                      login: ((email, password, formKey) => _register(
+                            email,
+                            password,
+                          ))),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  if (userProvider.errorMessage.isNotEmpty)
+                    Text(
+                      userProvider.errorMessage,
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 225, 47, 47),
+                          fontWeight: FontWeight.w600),
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    GestureDetector(
-                      onTap: () => _signIn(),
-                      child: const Text('Sign in'),
-                    )
-                  ],
-                ),
-                if (isLoading) const CircularProgressIndicator(),
-                // if (errorTxt.isNotEmpty)
-                //   Column(
-                //     children: [
-                //       const SizedBox(
-                //         height: 10,
-                //       ),
-                //       Text(
-                //         errorTxt,
-                //         style: const TextStyle(
-                //             color: Colors.red,
-                //             fontWeight: FontWeight.bold,
-                //             fontSize: 18),
-                //       ),
-                //     ],
-                //   )
-              ],
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Already hava a account?',
+                        style: TextStyle(color: Color.fromRGBO(91, 91, 91, 1)),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      GestureDetector(
+                        onTap: () => _signIn(userProvider),
+                        child: const Text('Sign in'),
+                      )
+                    ],
+                  ),
+                  if (isLoading) const CircularProgressIndicator(),
+                  // if (errorTxt.isNotEmpty)
+                  //   Column(
+                  //     children: [
+                  //       const SizedBox(
+                  //         height: 10,
+                  //       ),
+                  //       Text(
+                  //         errorTxt,
+                  //         style: const TextStyle(
+                  //             color: Colors.red,
+                  //             fontWeight: FontWeight.bold,
+                  //             fontSize: 18),
+                  //       ),
+                  //     ],
+                  //   )
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  _signIn() {
+  _signIn(UserProvider userProvider) {
+    userProvider.errorMessage = "";
     Navigator.push(
       context,
       MaterialPageRoute(

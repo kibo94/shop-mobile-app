@@ -5,9 +5,9 @@ BorderRadius borderRadius = BorderRadius.circular(20);
 // Hex to rgba: https://rgbacolorpicker.com/hex-to-rgba
 
 // const Color mainColor = Color.fromRGBO(79, 58, 208, 1);
-const Color shopBlack = Colors.black;
-const Color shopGrey1 = Color.fromRGBO(106, 105, 105, 1);
-const Color shopGrey2 = Color.fromRGBO(217, 217, 217, 1);
+const Color shopAction = Color.fromARGB(255, 21, 10, 218);
+const Color shopPrimary = Color.fromRGBO(242, 240, 240, 1);
+const Color shopSecondary = Colors.white;
 
 const TextStyle robotoRegular = TextStyle(
   fontFamily: "ROBOTO",
@@ -16,46 +16,47 @@ const headerShadowColor = Color.fromRGBO(173, 163, 163, 0.25);
 
 ThemeData shopTheme = ThemeData(
     appBarTheme: const AppBarTheme(
+      toolbarHeight: 60,
       shadowColor: headerShadowColor,
     ),
     brightness: Brightness.light,
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: shopPrimary,
     // Define the default font family.
     fontFamily: "ROBOTO",
     textTheme: const TextTheme(
-      headline1: TextStyle(
+      headlineLarge: TextStyle(
         fontSize: 30,
-        color: shopBlack,
+        color: Colors.black,
         fontWeight: FontWeight.w400,
       ),
-      headline2: TextStyle(
+      headlineMedium: TextStyle(
         fontSize: 25,
-        color: shopBlack,
+        color: Colors.black,
         fontWeight: FontWeight.w400,
       ),
-      headline3: TextStyle(
+      headlineSmall: TextStyle(
         fontSize: 20,
-        color: shopBlack,
+        color: Colors.black,
         fontWeight: FontWeight.w400,
       ),
-      headline4: TextStyle(
+      titleLarge: TextStyle(
         fontSize: 17,
-        color: shopBlack,
+        color: Colors.black,
         fontWeight: FontWeight.w400,
       ),
-      subtitle1: TextStyle(
+      titleMedium: TextStyle(
         fontSize: 20,
-        color: shopGrey1,
+        color: shopPrimary,
         fontWeight: FontWeight.w400,
       ),
-      subtitle2: TextStyle(
+      titleSmall: TextStyle(
         fontSize: 17,
-        color: shopGrey1,
+        color: Colors.black,
         fontWeight: FontWeight.w400,
       ),
-      caption: TextStyle(
+      bodySmall: TextStyle(
         fontSize: 13,
-        color: shopBlack,
+        color: Colors.black,
         fontWeight: FontWeight.w400,
       ),
     ));

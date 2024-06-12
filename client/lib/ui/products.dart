@@ -12,25 +12,22 @@ class Products extends StatelessWidget {
   Widget build(BuildContext context) {
     var data = Provider.of<ProductProvider>(context, listen: false);
     return Expanded(
-        child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            mainAxisSpacing: 0,
-            childAspectRatio: MediaQuery.of(context).size.width /
-                (MediaQuery.of(context).size.height / 1.2),
-            crossAxisCount: 2, // Two cards per row
-            crossAxisSpacing: 10),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          return ProductItem(
-            cart: data.cart,
-            onFavoriteClick: (Product prod) => () => {},
-            onAddToCartClick: (Product prod) => data.addProductToCart(prod),
-            product: products[index],
-          );
-        },
-      ),
+        child: GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisSpacing: 8,
+          childAspectRatio: MediaQuery.of(context).size.width /
+              (MediaQuery.of(context).size.height / 1.2),
+          crossAxisCount: 2, // Two cards per row
+          crossAxisSpacing: 8),
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        return ProductItem(
+          cart: data.cart,
+          onFavoriteClick: (Product prod) => () => {},
+          onAddToCartClick: (Product prod) => data.addProductToCart(prod),
+          product: products[index],
+        );
+      },
     ));
   }
 }

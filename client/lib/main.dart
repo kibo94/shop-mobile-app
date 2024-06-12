@@ -9,8 +9,10 @@ import 'package:my_app/pages/single_product_page.dart';
 import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
+import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
 // import 'package:provider/provider.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -23,7 +25,7 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 var mHttpOverrides = MyHttpOverrides();
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // await Firebase.initializeApp(
@@ -62,11 +64,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       onGenerateRoute: (settings) {
         var routes = {
-          MyHomePage.routeName: (context) {
-            return const MyHomePage(
-              title: "Home",
-            );
-          },
+          MyHomePage.routeName: (context) => const MyHomePage(),
           LoginPage.routeName: (context) => const LoginPage(),
           RegisterPage.routeName: (context) => const RegisterPage(),
           ProfilePage.routeName: (context) => const ProfilePage(),

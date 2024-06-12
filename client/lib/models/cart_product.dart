@@ -29,7 +29,21 @@ class CartProductModel {
       this.comments,
       this.imgUrl,
       required this.quantity});
-
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'quantity': quantity,
+      'price': price,
+      'type': type,
+      'inCart': inCart,
+      "isLiked": isLiked,
+      "details": details,
+      "comments": comments,
+      "imgUrl": imgUrl,
+      "author": author
+    };
+  }
   // factory Product.fromJson(Map<String, dynamic> json) {
   //   var comments = <Comment>[];
   //   if (json['comments'] != null) {
