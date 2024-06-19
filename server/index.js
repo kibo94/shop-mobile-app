@@ -328,7 +328,7 @@ app.post('/comments', (req, res) => {
     let user = req.body.user
     products = products.map(prodcut => {
         if (prodcut.id == id) {
-            prodcut.comments.push({ id: prodcut.comments.length, comment, user });
+            prodcut.comments.push({ id: prodcut.comments.length, comment, user, rating: req.body.rating, });
             return prodcut;
         }
         return prodcut;
