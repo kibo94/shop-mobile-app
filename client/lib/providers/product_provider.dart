@@ -22,8 +22,8 @@ class ProductProvider extends ChangeNotifier {
   List<String> get filters => _filters;
   List<CartProductModel> get cart => _cart;
   bool isLoadingProducts = false;
-  // var backendUrl = "https://shop-mobile-app-4.onrender.com";
-  var backendUrl = "https://192.168.0.103:4000";
+  var backendUrl = "https://shop-mobile-app-4.onrender.com";
+  // var backendUrl = "https://192.168.0.103:4000";
   setProduct(int? product) {
     selectedProduct = product;
     notifyListeners();
@@ -111,11 +111,14 @@ class ProductProvider extends ChangeNotifier {
     if (_cart.where((cartEl) => cartEl.id == selectedProduct).isEmpty) {
       cartPrd.quantity = quantity;
       _cart.add(cartPrd);
+      notifyListeners();
     } else {
-      cartPrd.quantity = quantity + cartPrd.quantity;
+      var updatedPrd = _cart.indexWhere((prd) => prd.id == product.id);
+
+      _cart[updatedPrd].quantity = _cart[updatedPrd].quantity + quantity;
+      notifyListeners();
     }
     selectedProduct = null;
-    notifyListeners();
   }
 
   addProductToFavorites(Product product) {

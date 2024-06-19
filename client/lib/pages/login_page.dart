@@ -3,7 +3,7 @@ import 'package:my_app/models/user.dart';
 import 'package:my_app/pages/register_page.dart';
 import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
-import 'package:my_app/ui/login_register_form.dart';
+import 'package:my_app/ui/login_form.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -63,36 +63,42 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 48,
                   ),
-                  LoginRegisterForm(
+                  LoginForm(
                       buttonName: 'Sign in',
                       login: ((email, password, formKey) =>
                           _login(email, password, formKey))),
-                  const SizedBox(
-                    height: 15,
-                  ),
                   if (userProvider.errorMessage.isNotEmpty)
-                    Text(
-                      userProvider.errorMessage,
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 225, 47, 47),
-                          fontWeight: FontWeight.w600),
+                    Column(
+                      children: [
+                        Text(
+                          userProvider.errorMessage,
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        )
+                      ],
                     ),
                   const SizedBox(
-                    height: 25,
+                    height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         'Do you hava a account?',
-                        style: TextStyle(color: Color.fromRGBO(91, 91, 91, 1)),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              color: const Color.fromRGBO(106, 105, 105, 1),
+                            ),
                       ),
                       const SizedBox(
                         width: 5,
                       ),
                       GestureDetector(
                         onTap: () => _signUp(userProvider),
-                        child: const Text('Sign up'),
+                        child: Text(
+                          'Sign up',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
                       )
                     ],
                   ),

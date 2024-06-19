@@ -6,30 +6,38 @@ class ActionButton extends StatelessWidget {
       {super.key,
       required this.onDone,
       this.btnColor = shopAction,
+      this.textColor,
       required this.btnName,
+      this.height,
       this.width});
   final Function onDone;
   final Color? btnColor;
   final String btnName;
   final double? width;
+  final double? height;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => onDone(),
       child: Container(
+        alignment: Alignment.center,
         width: width ?? MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.all(15),
+        height: height ?? 57,
         decoration: BoxDecoration(
             border: Border.all(width: 0, color: Colors.white),
             borderRadius: BorderRadius.circular(10),
             color: btnColor),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               btnName,
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Colors.white,
+                    color: textColor ?? Colors.white,
+                    height: 1,
                   ),
             )
           ],

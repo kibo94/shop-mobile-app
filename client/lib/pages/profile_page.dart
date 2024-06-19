@@ -37,93 +37,106 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       drawer: SideBar(barKey: _key),
-      body: ShopContainer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 30,
-            ),
-            Center(
-              child: Text(
-                "Account",
-                style: Theme.of(context).textTheme.headlineLarge,
+      body: SingleChildScrollView(
+        child: ShopContainer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 30,
               ),
-            ),
-            const SizedBox(
-              height: 36,
-            ),
-            if (isLogedIn)
-              Column(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.only(top: 13, bottom: 13, left: 20),
-                    width: 292,
-                    decoration: BoxDecoration(
-                        color: shopSecondary,
-                        borderRadius: BorderRadius.circular(10)
-                        // border: Border(
-                        //   bottom: BorderSide(color: shopAction, width: 1),
-                        // ),
-                        ),
-                    child: Text(
-                      userProvider.user!.email,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 35,
-                  ),
-                ],
-              ),
-            GestureDetector(
-              onTap: () => goToLogIn(isLogedIn),
-              child: Container(
-                width: 170,
-                height: 55,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: shopAction,
-                  borderRadius: BorderRadius.circular(15),
+              Center(
+                child: Text(
+                  "Account",
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
-                child: Stack(
+              ),
+              const SizedBox(
+                height: 36,
+              ),
+              if (isLogedIn)
+                Column(
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          isLogedIn ? "Logout" : "Sign in",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
-                              ?.copyWith(
-                                color: Colors.white,
-                              ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        if (isLogedIn)
-                          const Icon(
-                            Icons.logout,
-                            color: Colors.white,
-                          )
-                      ],
+                    profileField(
+                      userProvider.user!.fullName,
                     ),
-                    if (!isLogedIn)
-                      Positioned(
-                          right: 27,
-                          top: 3,
-                          child: SvgPicture.asset(
-                            'assets/images/user-white.svg',
-                          ))
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    profileField(
+                      userProvider.user!.email,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    profileField(
+                      userProvider.user!.city,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    profileField(
+                      userProvider.user!.address,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    profileField(
+                      userProvider.user!.phone,
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
                   ],
                 ),
-              ),
-            )
-          ],
+              GestureDetector(
+                onTap: () => goToLogIn(isLogedIn),
+                child: Container(
+                  width: 170,
+                  height: 55,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: shopAction,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Stack(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            isLogedIn ? "Logout" : "Sign in",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium
+                                ?.copyWith(
+                                  color: Colors.white,
+                                ),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          if (isLogedIn)
+                            const Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                            )
+                        ],
+                      ),
+                      if (!isLogedIn)
+                        Positioned(
+                            right: 27,
+                            top: 3,
+                            child: SvgPicture.asset(
+                              'assets/images/user-white.svg',
+                            ))
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -147,5 +160,26 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       );
     }
+  }
+
+  Column profileField(text) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.only(top: 13, bottom: 13, left: 20),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              color: shopSecondary, borderRadius: BorderRadius.circular(10)
+              // border: Border(
+              //   bottom: BorderSide(color: shopAction, width: 1),
+              // ),
+              ),
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        ),
+      ],
+    );
   }
 }

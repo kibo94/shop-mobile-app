@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_app/models/cart_product.dart';
 import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/style/theme.dart';
+import 'package:my_app/ui/dialogs/confirm_dialog.dart';
 import 'package:my_app/ui/product_quantity_update.dart';
 import 'package:provider/provider.dart';
 
@@ -111,7 +114,19 @@ class _CartProductState extends State<CartProduct> {
             top: 0,
             right: 16,
             child: GestureDetector(
-              onTap: () => dataProvider.removeProductFromCart(widget.product),
+              onTap: () async => {
+                await showDialog(
+                    context: context,
+                    builder: (context) => ConfirmDialog(
+                          onNo: () => Navigator.of(context).pop(),
+                          onYes: () => {
+                            dataProvider.removeProductFromCart(widget.product),
+                            Navigator.of(context).pop()
+                          },
+                          title:
+                              "Are you sure that you want to\nremove this item",
+                        ))
+              },
               child: SvgPicture.asset(
                 'assets/images/remove_bin.svg',
                 color: shopAction,

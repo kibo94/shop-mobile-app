@@ -72,4 +72,22 @@ class Util {
       );
     }
   }
+
+  static String validateUserEmail(String email) {
+    final bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
+    if (emailValid) {
+      return "";
+    } else {
+      return "Please enter a email";
+    }
+  }
+
+  static String validateInputField(String value, int length) {
+    if (value.length <= length) {
+      return "Min chars is $length";
+    }
+    return "";
+  }
 }

@@ -11,9 +11,9 @@ import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
 
-// var backendUrl = "https://shop-mobile-app-4.onrender.com";
+var backendUrl = "https://shop-mobile-app-4.onrender.com";
 
-var backendUrl = "https://192.168.0.103:4000";
+// var backendUrl = "https://192.168.0.103:4000";
 
 class UserProvider extends ChangeNotifier {
   User? user;
@@ -30,19 +30,8 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  validateUserEmail(String email) {
-    final bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(email);
-    if (emailValid) {
-      errorMessage = "";
-    } else {
-      errorMessage = "Please enter a email";
-    }
-    notifyListeners();
-  }
-
-  registerTheUser(String email, String password, BuildContext context) async {
+  registerTheUser(String email, String password, String fullName, String city,
+      String address, String phone, BuildContext context) async {
     try {
       var res = await http.post(
         Uri.parse(
@@ -54,6 +43,10 @@ class UserProvider extends ChangeNotifier {
         body: jsonEncode(<String, String>{
           'email': email,
           'password': password,
+          'fullName': fullName,
+          'city': city,
+          'address': address,
+          'phone': phone,
           // Add any other data you want to send in the body
         }),
       );
@@ -63,6 +56,8 @@ class UserProvider extends ChangeNotifier {
         errorMessage = "User exsits";
         notifyListeners();
       } else {
+        errorMessage = "";
+        notifyListeners();
         Navigator.push(
           context,
           MaterialPageRoute(builder: ((context) => const LoginPage())),
@@ -89,6 +84,7 @@ class UserProvider extends ChangeNotifier {
         body: jsonEncode(<String, String>{
           'email': email,
           'password': password,
+
           // Add any other data you want to send in the body
         }),
       );

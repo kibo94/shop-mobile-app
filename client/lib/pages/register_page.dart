@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/pages/login_page.dart';
 import 'package:my_app/providers/user_provider.dart';
-import 'package:my_app/ui/login_register_form.dart';
+import 'package:my_app/ui/login_form.dart';
+import 'package:my_app/ui/register_form.dart';
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -12,9 +13,17 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  _register(String email, String password) async {
+  _register(
+    String email,
+    String password,
+    String fullName,
+    String city,
+    String address,
+    String phone,
+  ) async {
     var userProvider = Provider.of<UserProvider>(context, listen: false);
-    userProvider.registerTheUser(email, password, context);
+    userProvider.registerTheUser(
+        email, password, fullName, city, address, phone, context);
   }
 
   bool isLoading = false;
@@ -24,7 +33,6 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(builder: (context, userProvider, child) {
       return Scaffold(
-        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -48,12 +56,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(
                     height: 40,
                   ),
-                  LoginRegisterForm(
+                  RegisterForm(
                       buttonName: "Sign Up",
-                      login: ((email, password, formKey) => _register(
-                            email,
-                            password,
-                          ))),
+                      register: ((email, password, fullName, city, address,
+                              phone, formKey) =>
+                          _register(email, password, fullName, city, address,
+                              phone))),
                   const SizedBox(
                     height: 15,
                   ),
@@ -109,7 +117,9 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   _signIn(UserProvider userProvider) {
-    userProvider.errorMessage = "";
+    setState(() {
+      userProvider.errorMessage = "";
+    });
     Navigator.push(
       context,
       MaterialPageRoute(
