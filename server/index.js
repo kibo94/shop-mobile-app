@@ -10,19 +10,30 @@ const app = express()
 
 
 const port = process.env.PORT || 4000;
-console.log(1234);
 const users = [
     {
+        fullName: "Bojan Bogdanovic",
         email: "bojanb106@gmail.com",
-        password: "12345"
+        password: "12345",
+        address: "Vladike Nikolaja 100/5",
+        city: "Čačak",
+        phone: "0617238135"
     },
     {
+        fullName: "Test Testovic",
         email: "test@gmail.com",
-        password: "12345"
+        password: "123",
+        address: "Nemanjina 55",
+        city: "Čačak",
+        phone: "0612221113"
     },
     {
-        email: "jondoe@gmailmail.com.com",
-        password: "12345"
+        fullName: "John Doe",
+        email: "jondoe@gmailmail.com",
+        city: "Čačak",
+        password: "12345",
+        address: "Nemanjina 33",
+        phone: "0612221413"
     }
 ]
 let products = [
@@ -297,10 +308,12 @@ app.post('/register', async (req, res) => {
     let user = users.find(user => user.email == req.body.email)
     try {
         if (user) throw new Error('User not exists');
-        users.push({ email: req.body.email, password: req.body.password });
+        var { email, password, fullName, city, address, phone } = req.body;
+        users.push({ email, password, fullName, city, address, phone });
         res.json(200)
     } catch (error) {
         console.log("catch triggereddd")
+        console.log(error.message)
         res.status(404).json({ success: false, error: error.message });
     }
 })
