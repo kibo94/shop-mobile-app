@@ -7,6 +7,7 @@ import 'package:my_app/providers/user_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/add_to_cart.dart';
 import 'package:my_app/ui/container.dart';
+import 'package:my_app/ui/dialogs/make_impression_dialog.dart';
 import 'package:my_app/ui/product_comments.dart';
 import 'package:my_app/ui/product_rating.dart';
 import 'package:my_app/providers/product_provider.dart';
@@ -35,6 +36,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
   @override
   Widget build(BuildContext context) {
     var dataProvider = Provider.of<ProductProvider>(context, listen: true);
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
 
     return Scaffold(
       key: _key,
@@ -70,17 +72,36 @@ class _SingleProductPageState extends State<SingleProductPage> {
                 height: 10,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Rating(rating: Util.getRatingForProduct(widget.product)),
-                  const SizedBox(
-                    width: 10,
+                  Row(
+                    children: [
+                      Rating(rating: Util.getRatingForProduct(widget.product)),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        '${Util.getRatingForProduct(widget.product)} / 5',
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
+                      )
+                    ],
                   ),
-                  Text(
-                    '${Util.getRatingForProduct(widget.product)} / 5',
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  )
+                  if (userProvider.user != null)
+                    GestureDetector(
+                      onTap: () async => {
+                        await showDialog(
+                            context: context,
+                            builder: (context) => MakeImpressionDialog(
+                                  productId: widget.product.id,
+                                ))
+                      },
+                      child: Text(
+                        "Add impression",
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    )
                 ],
               ),
               const SizedBox(
@@ -180,9 +201,6 @@ class _SingleProductPageState extends State<SingleProductPage> {
                     "Comments",
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
-                  const SizedBox(
-                    height: 22,
-                  ),
                   FormField<String>(
                     builder: (state) {
                       return Column(
@@ -191,51 +209,9 @@ class _SingleProductPageState extends State<SingleProductPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.only(left: 17),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: TextFormField(
-                                    controller: controller,
-                                    decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                        hintStyle: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 18,
-                                        ),
-                                        hintText: "Enter your comment"),
-                                    onChanged: (value) =>
-                                        state.didChange(value),
-                                  ),
-                                ),
-                              ),
                               const SizedBox(
                                 width: 17,
                               ),
-                              GestureDetector(
-                                onTap: () => {
-                                  Util.makeActionDependIfUserLogedIn(
-                                    context,
-                                    () => _addCommnetToProduct(state),
-                                  )
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: shopAction,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: const Text(
-                                    "Comment",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                              )
                             ],
                           ),
                         ],
@@ -258,17 +234,5 @@ class _SingleProductPageState extends State<SingleProductPage> {
         ),
       ),
     );
-  }
-
-  _addCommnetToProduct(FormFieldState<String> state) {
-    var dataProvider = Provider.of<ProductProvider>(context, listen: false);
-    var userProvider = Provider.of<UserProvider>(context, listen: false);
-    dataProvider.addCommentToProduct(
-      widget.product.id,
-      state.value!,
-      userProvider.user!.email,
-      context,
-    );
-    controller.clear();
   }
 }

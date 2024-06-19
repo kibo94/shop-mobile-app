@@ -52,16 +52,31 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(
-                height: 36,
+                height: 39,
               ),
               if (isLogedIn)
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      "Full Name",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     profileField(
                       userProvider.user!.fullName,
                     ),
                     const SizedBox(
                       height: 20,
+                    ),
+                    Text(
+                      "Email",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(
+                      height: 15,
                     ),
                     profileField(
                       userProvider.user!.email,
@@ -69,17 +84,38 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(
                       height: 20,
                     ),
+                    Text(
+                      "City",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     profileField(
                       userProvider.user!.city,
                     ),
                     const SizedBox(
                       height: 20,
                     ),
+                    Text(
+                      "Address",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
                     profileField(
                       userProvider.user!.address,
                     ),
                     const SizedBox(
                       height: 20,
+                    ),
+                    Text(
+                      "Phone",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(
+                      height: 15,
                     ),
                     profileField(
                       userProvider.user!.phone,
@@ -126,14 +162,18 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       if (!isLogedIn)
                         Positioned(
-                            right: 27,
-                            top: 3,
-                            child: SvgPicture.asset(
-                              'assets/images/user-white.svg',
-                            ))
+                          right: 27,
+                          top: 3,
+                          child: SvgPicture.asset(
+                            'assets/images/user-white.svg',
+                          ),
+                        ),
                     ],
                   ),
                 ),
+              ),
+              SizedBox(
+                height: 30,
               )
             ],
           ),
@@ -176,7 +216,9 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
           child: Text(
             text,
-            style: Theme.of(context).textTheme.headlineMedium,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: shopGrey,
+                ),
           ),
         ),
       ],

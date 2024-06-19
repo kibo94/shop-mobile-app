@@ -156,7 +156,8 @@ class ProductProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  addCommentToProduct(id, String comment, String name, BuildContext ctx) async {
+  addCommentToProduct(
+      id, String comment, String name, int rating, BuildContext ctx) async {
     var userProvider = Provider.of<UserProvider>(ctx, listen: false);
     _products[_products.indexWhere((element) => element.id == id)]
         .comments
@@ -166,7 +167,7 @@ class ProductProvider extends ChangeNotifier {
               comment: comment,
               user: userProvider.user!.email,
               id: id,
-              rating: 2,
+              rating: rating,
             ));
 
     await http.post(
