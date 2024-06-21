@@ -290,11 +290,11 @@ app.get('/products', (req, res) => {
 
 })
 app.post('/login', async (req, res) => {
-    let user = users.find(user => user.email == req.body.email)
+    let user = users.find(user => user.email == req.body.email && user.password == req.body.password)
     console.log(users)
 
     try {
-        if (!user) throw new Error('User not exists');
+        if (!user) throw new Error('Wrong password or email ');
         console.log("user loged in")
         res.status(200).json({ user: user });
     } catch (error) {
@@ -307,7 +307,7 @@ app.post('/login', async (req, res) => {
 app.post('/register', async (req, res) => {
     let user = users.find(user => user.email == req.body.email)
     try {
-        if (user) throw new Error('User not exists');
+        if (user) throw new Error('User  exists');
         var { email, password, fullName, city, address, phone } = req.body;
         users.push({ email, password, fullName, city, address, phone });
         res.json(200)
