@@ -67,14 +67,15 @@ class _LoginPageState extends State<LoginPage> {
                       buttonName: 'Sign in',
                       login: ((email, password, formKey) =>
                           _login(email, password, formKey))),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   if (userProvider.errorMessage.isNotEmpty)
                     Column(
                       children: [
                         Text(
                           userProvider.errorMessage,
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
+                          style: TextStyle(color: Colors.red, fontSize: 18),
                         )
                       ],
                     ),

@@ -88,20 +88,6 @@ class _SingleProductPageState extends State<SingleProductPage> {
                       )
                     ],
                   ),
-                  if (userProvider.user != null)
-                    GestureDetector(
-                      onTap: () async => {
-                        await showDialog(
-                            context: context,
-                            builder: (context) => MakeImpressionDialog(
-                                  productId: widget.product.id,
-                                ))
-                      },
-                      child: Text(
-                        "Add impression",
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                    )
                 ],
               ),
               const SizedBox(
@@ -172,7 +158,7 @@ class _SingleProductPageState extends State<SingleProductPage> {
                     ],
                   ),
                   const SizedBox(
-                    height: 27,
+                    height: 15,
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -188,38 +174,18 @@ class _SingleProductPageState extends State<SingleProductPage> {
                       Text(
                         widget.product.details,
                         style: const TextStyle(
-                          color: Colors.black,
+                          color: shopGrey,
                           fontSize: 18,
                         ),
                       )
                     ],
                   ),
                   const SizedBox(
-                    height: 24,
+                    height: 15,
                   ),
                   Text(
                     "Comments",
                     style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  FormField<String>(
-                    builder: (state) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const SizedBox(
-                                width: 17,
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 27,
                   ),
                   Comments(
                     product: widget.product,

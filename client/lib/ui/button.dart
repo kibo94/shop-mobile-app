@@ -8,11 +8,13 @@ class ActionButton extends StatelessWidget {
       this.btnColor = shopAction,
       this.textColor,
       required this.btnName,
+      this.theme,
       this.height,
       this.width});
   final Function onDone;
   final Color? btnColor;
   final String btnName;
+  final TextStyle? theme;
   final double? width;
   final double? height;
   final Color? textColor;
@@ -35,10 +37,11 @@ class ActionButton extends StatelessWidget {
           children: [
             Text(
               btnName,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: textColor ?? Colors.white,
-                    height: 1,
-                  ),
+              style: theme ??
+                  Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: textColor ?? Colors.white,
+                        height: 1,
+                      ),
             )
           ],
         ),

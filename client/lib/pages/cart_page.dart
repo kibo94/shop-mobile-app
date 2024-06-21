@@ -81,30 +81,44 @@ class _CartPageState extends State<CartPage> {
               ],
             ))
           : null,
-      body: const ShopContainer(
+      body: ShopContainer(
         child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 30,
-                ),
-                Text(
-                  "Cart",
-                  style: TextStyle(
-                    fontSize: 35,
+          child: dataProvider.cart.isNotEmpty
+              ? const Center(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        "Cart",
+                        style: TextStyle(
+                          fontSize: 35,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 36,
+                      ),
+                      CartProducts(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+                )
+              : SizedBox(
+                  height: MediaQuery.of(context).size.height - 120,
+                  width: MediaQuery.of(context).size.width,
+                  child: const Expanded(
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      "The cart is empty",
+                      style: TextStyle(
+                        fontSize: 35,
+                      ),
+                    ),
                   ),
                 ),
-                SizedBox(
-                  height: 36,
-                ),
-                CartProducts(),
-                SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

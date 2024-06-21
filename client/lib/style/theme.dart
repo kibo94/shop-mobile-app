@@ -5,7 +5,7 @@ BorderRadius borderRadius = BorderRadius.circular(20);
 // Hex to rgba: https://rgbacolorpicker.com/hex-to-rgba
 
 // const Color mainColor = Color.fromRGBO(79, 58, 208, 1);
-const Color shopAction = Color.fromARGB(255, 21, 10, 218);
+const Color shopAction = Color.fromRGBO(40, 62, 176, 1);
 const Color shopPrimary = Color.fromRGBO(242, 240, 240, 1);
 const Color shopSecondary = Colors.white;
 const Color shopGrey = Color.fromRGBO(106, 105, 105, 1);

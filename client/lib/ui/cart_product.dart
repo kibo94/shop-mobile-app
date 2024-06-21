@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_app/models/cart_product.dart';
@@ -7,6 +5,7 @@ import 'package:my_app/providers/product_provider.dart';
 import 'package:my_app/style/theme.dart';
 import 'package:my_app/ui/dialogs/confirm_dialog.dart';
 import 'package:my_app/ui/product_quantity_update.dart';
+import 'package:my_app/utils/util.dart';
 import 'package:provider/provider.dart';
 
 class CartProduct extends StatefulWidget {
@@ -120,6 +119,12 @@ class _CartProductState extends State<CartProduct> {
                     builder: (context) => ConfirmDialog(
                           onNo: () => Navigator.of(context).pop(),
                           onYes: () => {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              Util.snackBar(
+                                "The product has been removed from cart",
+                                context,
+                              ),
+                            ),
                             dataProvider.removeProductFromCart(widget.product),
                             Navigator.of(context).pop()
                           },

@@ -79,11 +79,8 @@ class _MakeImpressionDialogState extends State<MakeImpressionDialog> {
               width: 203,
               height: 43,
               onDone: () => {
-                if (errorMessage.isEmpty)
-                  {
-                    // add impression
-                    _addCommnetToProduct(context)
-                  }
+                // add impression
+                _addCommnetToProduct(context)
               },
             ),
           ],
@@ -93,22 +90,28 @@ class _MakeImpressionDialogState extends State<MakeImpressionDialog> {
   }
 
   _addCommnetToProduct(BuildContext ctx) {
-    var dataProvider = Provider.of<ProductProvider>(context, listen: false);
-    var userProvider = Provider.of<UserProvider>(context, listen: false);
-    dataProvider.addCommentToProduct(
-      widget.productId,
-      commentController.text,
-      userProvider.user!.email,
-      rating,
-      ctx,
-    );
-    commentController.clear();
-    ScaffoldMessenger.of(context).showSnackBar(
-      Util.snackBar(
-        "The impression has been added",
-        context,
-      ),
-    );
-    Navigator.of(context).pop();
+    setState(() {
+      errorMessage = Util.validateInputField(commentController.text, 10);
+    });
+
+    if (errorMessage.isEmpty) {
+      var dataProvider = Provider.of<ProductProvider>(context, listen: false);
+      var userProvider = Provider.of<UserProvider>(context, listen: false);
+      dataProvider.addCommentToProduct(
+        widget.productId,
+        commentController.text,
+        userProvider.user!.email,
+        rating,
+        ctx,
+      );
+      commentController.clear();
+      ScaffoldMessenger.of(context).showSnackBar(
+        Util.snackBar(
+          "The impression has been added",
+          context,
+        ),
+      );
+      Navigator.of(context).pop();
+    }
   }
 }

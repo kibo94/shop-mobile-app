@@ -177,7 +177,8 @@ class ProductProvider extends ChangeNotifier {
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({'id': id, "comment": comment, "user": name}),
+      body: jsonEncode(
+          {'id': id, "comment": comment, "user": name, "rating": rating}),
     );
     notifyListeners();
   }

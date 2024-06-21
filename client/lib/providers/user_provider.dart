@@ -104,7 +104,7 @@ class UserProvider extends ChangeNotifier {
       if (res.statusCode == 404) {
         isLoading = false;
 
-        errorMessage = "User not found";
+        errorMessage = json.decode(res.body)['error'];
         notifyListeners();
       }
 
@@ -147,7 +147,9 @@ class UserProvider extends ChangeNotifier {
           )
           .then((value) async => {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  Util.snackBar("Hvala na kupovini kod nas...", context),
+                  Util.snackBar(
+                      "Hvala na kupovini kod nas, racun ce stici na vas mejl adresu.",
+                      context),
                 ),
                 await dataProvider.resetCart()
               });
