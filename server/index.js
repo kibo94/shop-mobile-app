@@ -326,9 +326,12 @@ app.get('/filters', (req, res) => {
 
 })
 
-app.get('/products', (req, res) => {
+app.get('/products', async (req, res) => {
     console.log('hi form api')
-    res.json(products);
+
+    var dbProducts = await db.collection('products').find().toArray();
+
+    res.json(dbProducts);
 
 })
 app.post('/login', async (req, res) => {
