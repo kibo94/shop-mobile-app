@@ -142,7 +142,6 @@ let products = [];
 // ]
 
 var dbURI = "mongodb+srv://bojan947:Bojan947@bogishop.jnzb5zx.mongodb.net/?retryWrites=true&w=majority&appName=bogiShop"
-var client;
 var db;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 
@@ -155,42 +154,36 @@ app.use(cors({
 }))
 // });
 
-const httpsServer = https.createServer({
-    key: fs.readFileSync(path.join("cert", "key.pem")),
-    cert: fs.readFileSync(path.join("cert", "cert.pem"))
-}, app);
-var client = new MongoClient(dbURI, {
+
+MongoClient.connect(dbURI, {
 
     serverApi: {
         version: ServerApiVersion.v1,
         strict: true,
         deprecationErrors: true,
     }
-});
-async function run() {
-
-    try {
-        // Connect the client to the server	(optional starting in v4.7)
-
-        client.connect().then((cli) => {
-            cli.db("Products").command({ ping: 1 });
-            console.log("Pinged your deployment. You successfully connected to MongoDB!");
-            db = cli.db("Products");
-            app.listen(port);
-            // httpsServer.listen(port, (s) => console.log('port is live', port))
-        });
-        // Send a ping to confirm a successful connection
-
-
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-    }
-
-}
+}).then((client) => {
+    db = client.db("Products");
+    httpsServer.listen(port, (s) => console.log('port is live', port))
+}).catch(err => console.log(err));
+// try {
+//     // Connect the client to the server	(optional starting in v4.7)
+//     await client.connect();
+//     // Send a ping to confirm a successful connection
+//     await client.db("Products").command({ ping: 1 });
+//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+//     db = client.db("Products");
+//     var prds = db.collection("products")
+//     // console.log(prds);
+//     const documents = await prds.find({}).toArray();
+//     products = documents;
 
 
-run()
+
+// } finally {
+//     // Ensures that the client will close when you finish/error
+//     await client.close();
+// }
 
 app.post('/register', async (req, res) => {
 
@@ -198,11 +191,10 @@ app.post('/register', async (req, res) => {
     try {
         if (user) throw new Error('User  exists');
         var { email, password, fullName, city, address, phone } = req.body;
-        await db.collection("users").insertOne({ email, password, fullName, city, address, phone })
 
+        // users.push({ email, password, fullName, city, address, phone });
         res.json(200)
-
-
+        await db.collection("users").insertOne({ email, password, fullName, city, address, phone })
 
 
     } catch (error) {
@@ -332,8 +324,9 @@ app.get('/products', (req, res) => {
 
 })
 app.post('/login', async (req, res) => {
-    var dbUsers = await db.collection('users').find().toArray();
-    let user = dbUsers.find(user => user.email == req.body.email && user.password == req.body.password)
+    let user = users.find(user => user.email == req.body.email && user.password == req.body.password)
+    console.log(users)
+
     try {
         if (!user) throw new Error('Wrong password or email ');
         console.log("user loged in")
@@ -367,7 +360,12 @@ app.post('/comments', (req, res) => {
 })
 
 
+const httpsServer = https.createServer({
+    key: fs.readFileSync(path.join("cert", "key.pem")),
+    cert: fs.readFileSync(path.join("cert", "cert.pem"))
+}, app);
 
 
 
 
+// app.listen(port);
