@@ -190,7 +190,7 @@ async function run() {
 }
 
 
-run()
+
 
 app.post('/register', async (req, res) => {
 
@@ -199,11 +199,7 @@ app.post('/register', async (req, res) => {
         if (user) throw new Error('User  exists');
         var { email, password, fullName, city, address, phone } = req.body;
         await db.collection("users").insertOne({ email, password, fullName, city, address, phone })
-
         res.json(200)
-
-
-
 
     } catch (error) {
         console.log("catch triggereddd")
@@ -369,7 +365,7 @@ app.post('/comments', (req, res) => {
 
 })
 
-
+run()
 
 
 
