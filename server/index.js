@@ -292,7 +292,7 @@ app.post('/createReceipt', (req, res) => {
 
         console.log("Message sent: %s", info.messageId);
 
-        // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
+
     }
     res.status(200).json({ msg: "Receipt has been created" });
     main().catch(console.error);
@@ -364,6 +364,7 @@ app.post('/comments', (req, res) => {
     res.json(products);
 
 })
+
 
 run()
 
