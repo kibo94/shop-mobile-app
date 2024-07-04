@@ -32,7 +32,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PATCH', 'PUT']
 }))
 // });
-const server = new WebSocketServer({ port: port });
+// const server = new WebSocketServer({ port: port });
 const httpsServer = https.createServer({
     key: fs.readFileSync(path.join("cert", "key.pem")),
     cert: fs.readFileSync(path.join("cert", "cert.pem"))
@@ -55,26 +55,26 @@ async function run() {
             console.log("Pinged your deployment. You successfully connected to MongoDB!");
             db = cli.db("Products");
             app.listen(port);
-            server.on('connection', (ws) => {
-                let messages = [];
+            // server.on('connection', (ws) => {
+            //     let messages = [];
 
 
-                // Listen for messages from the client
-                ws.on('message', (message) => {
-                    const buff = Buffer.from(message, "utf-8");
-                    console.log(buff.toString())
-                    server.clients.forEach((client) => {
+            //     // Listen for messages from the client
+            //     ws.on('message', (message) => {
+            //         const buff = Buffer.from(message, "utf-8");
+            //         console.log(buff.toString())
+            //         server.clients.forEach((client) => {
 
-                        client.send(buff.toString());
+            //             client.send(buff.toString());
 
-                    });
-                });
+            //         });
+            //     });
 
-                // Handle disconnection
-                ws.on('close', () => {
-                    console.log('Client disconnected');
-                });
-            });
+            //     // Handle disconnection
+            //     ws.on('close', () => {
+            //         console.log('Client disconnected');
+            //     });
+            // });
 
             // httpsServer.listen(port, (s) => console.log('port is live', port))
         });
