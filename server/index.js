@@ -70,7 +70,7 @@ async function run() {
             cli.db("Products").command({ ping: 1 });
             console.log("Pinged your deployment. You successfully connected to MongoDB!");
             db = cli.db("Products");
-
+            httpsServer.listen(port, () => { console.log(`Server run on port ${port}`) })
 
 
 
@@ -284,7 +284,7 @@ app.post('/comments', (req, res) => {
 
 run()
 
-wsServer.listen(port, () => { console.log(`Server run on port ${port}`) })
+
 
 
 
