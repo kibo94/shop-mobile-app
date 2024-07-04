@@ -12,7 +12,8 @@ const app = express()
 
 
 const port = process.env.PORT || 4000;
-
+const wsport = process.env.PORT || 8080;
+const server = new WebSocket.Server({ port: wsport });
 let users = [
 
 ]
@@ -55,32 +56,32 @@ async function run() {
             console.log("Pinged your deployment. You successfully connected to MongoDB!");
             db = cli.db("Products");
             app.listen(port);
-            // server.on('connection', (ws) => {
-            //     let messages = [];
 
-
-            //     // Listen for messages from the client
-            //     ws.on('message', (message) => {
-            //         const buff = Buffer.from(message, "utf-8");
-            //         console.log(buff.toString())
-            //         server.clients.forEach((client) => {
-
-            //             client.send(buff.toString());
-
-            //         });
-            //     });
-
-            //     // Handle disconnection
-            //     ws.on('close', () => {
-            //         console.log('Client disconnected');
-            //     });
-            // });
 
             // httpsServer.listen(port, (s) => console.log('port is live', port))
         });
         // Send a ping to confirm a successful connection
 
+        server.on('connection', (ws) => {
+            let messages = [];
 
+
+            // Listen for messages from the client
+            ws.on('message', (message) => {
+                const buff = Buffer.from(message, "utf-8");
+                console.log(buff.toString())
+                server.clients.forEach((client) => {
+
+                    client.send(buff.toString());
+
+                });
+            });
+
+            // Handle disconnection
+            ws.on('close', () => {
+                console.log('Client disconnected');
+            });
+        });
     } finally {
         // Ensures that the client will close when you finish/error
         await client.close();
