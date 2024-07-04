@@ -12,8 +12,9 @@ const app = express()
 
 
 const port = process.env.PORT || 4000;
-const wsport = process.env.PORT_WS || 8081;
-const server = new WebSocketServer({ port: wsport });
+const port2 = process.env.PORT2 || 8081;
+
+
 let users = [
 
 ]
@@ -46,6 +47,7 @@ var client = new MongoClient(dbURI, {
         deprecationErrors: true,
     }
 });
+const server = new WebSocketServer({ port: port2 });
 async function run() {
 
     try {
@@ -56,32 +58,32 @@ async function run() {
             console.log("Pinged your deployment. You successfully connected to MongoDB!");
             db = cli.db("Products");
             app.listen(port);
+            server.on('connection', (ws) => {
+                let messages = [];
 
+
+                // Listen for messages from the client
+                ws.on('message', (message) => {
+                    const buff = Buffer.from(message, "utf-8");
+                    console.log(buff.toString())
+                    server.clients.forEach((client) => {
+
+                        client.send(buff.toString());
+
+                    });
+                });
+
+                // Handle disconnection
+                ws.on('close', () => {
+                    console.log('Client disconnected');
+                });
+            });
 
             // httpsServer.listen(port, (s) => console.log('port is live', port))
         });
         // Send a ping to confirm a successful connection
 
-        server.on('connection', (ws) => {
-            let messages = [];
 
-
-            // Listen for messages from the client
-            ws.on('message', (message) => {
-                const buff = Buffer.from(message, "utf-8");
-                console.log(buff.toString())
-                server.clients.forEach((client) => {
-
-                    client.send(buff.toString());
-
-                });
-            });
-
-            // Handle disconnection
-            ws.on('close', () => {
-                console.log('Client disconnected');
-            });
-        });
     } finally {
         // Ensures that the client will close when you finish/error
         await client.close();
