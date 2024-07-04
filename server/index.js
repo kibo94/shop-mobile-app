@@ -59,29 +59,15 @@ var client = new MongoClient(dbURI, {
         deprecationErrors: true,
     }
 });
-const wsServer = https.createServer(app)
+const wsServer = http.createServer(app)
 const wss = new WebSocket.Server({ server: wsServer });
-async function run() {
+client.connect().then((cli) => {
+    cli.db("Products").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    db = cli.db("Products");
 
-    try {
-        // Connect the client to the server	(optional starting in v4.7)
-
-        client.connect().then((cli) => {
-            cli.db("Products").command({ ping: 1 });
-            console.log("Pinged your deployment. You successfully connected to MongoDB!");
-            db = cli.db("Products");
-
-            // httpsServer.listen(port, (s) => console.log('port is live', port))
-        });
-        // Send a ping to confirm a successful connection
-
-
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-    }
-
-}
+    // httpsServer.listen(port, (s) => console.log('port is live', port))
+}).catch((err) => console.log(err));
 
 
 wss.on('connection', (ws) => {
@@ -105,7 +91,7 @@ wss.on('connection', (ws) => {
     });
 });
 
-wsServer.post('/register', async (req, res) => {
+app.post('/register', async (req, res) => {
 
     let user = users.find(user => user.email == req.body.email)
     try {
@@ -120,7 +106,7 @@ wsServer.post('/register', async (req, res) => {
         res.status(404).json({ success: false, error: error.message });
     }
 })
-wsServer.post('/createReceipt', (req, res) => {
+app.post('/createReceipt', (req, res) => {
     var products = JSON.parse(req.body.products);
     var email = req.body.email
     var totalPrice = 0;
@@ -212,14 +198,14 @@ wsServer.post('/createReceipt', (req, res) => {
 })
 
 
-wsServer.get('/', async (req, res) => {
+app.get('/', async (req, res) => {
 
     console.log('hi form api')
     res.json({ 'name': "bojan" })
 
 });
 
-wsServer.get('/search', (req, res) => {
+app.get('/search', (req, res) => {
     var text = req.query.text;
     var searchedPrds = products
         .filter(product => product.name.toLocaleLowerCase()
@@ -228,14 +214,14 @@ wsServer.get('/search', (req, res) => {
     res.json(searchedPrds);
 
 })
-wsServer.get('/filters', (req, res) => {
+app.get('/filters', (req, res) => {
     var filters = products.map((product) => product.type)
 
     res.json(filters.filter((item, pos) => filters.indexOf(item) == pos));
 
 })
 
-wsServer.get('/products', async (req, res) => {
+app.get('/products', async (req, res) => {
     console.log('hi form api')
 
     var dbProducts = await db.collection('products').find().toArray();
@@ -243,7 +229,7 @@ wsServer.get('/products', async (req, res) => {
     res.json(dbProducts);
 
 })
-wsServer.post('/login', async (req, res) => {
+app.post('/login', async (req, res) => {
     var dbUsers = await db.collection('users').find().toArray();
     let user = dbUsers.find(user => user.email == req.body.email && user.password == req.body.password)
     try {
@@ -258,12 +244,12 @@ wsServer.post('/login', async (req, res) => {
 })
 
 
-wsServer.put('/filterProducts', (req, res) => {
+app.put('/filterProducts', (req, res) => {
     const prodType = req.body.type.toLowerCase();
     const filteredProducts = prodType == "all" ? products : products.filter(prod => prod.type == prodType);
     res.json(filteredProducts);
 })
-wsServer.post('/comments', (req, res) => {
+app.post('/comments', (req, res) => {
     let id = req.body.id;
     let comment = req.body.comment
     let user = req.body.user
@@ -279,7 +265,7 @@ wsServer.post('/comments', (req, res) => {
 })
 
 
-run()
+
 wsServer.listen(port, () => { console.log(`Server run on port ${port}`) })
 
 
