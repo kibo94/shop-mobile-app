@@ -12,8 +12,8 @@ const app = express()
 
 
 const port = process.env.PORT || 4000;
-const wsport = process.env.PORT || 8080;
-const server = new WebSocketServer.Server({ port: wsport });
+const wsport = process.env.PORT_WS || 8081;
+const server = new WebSocketServer({ port: wsport });
 let users = [
 
 ]
