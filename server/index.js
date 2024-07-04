@@ -60,7 +60,7 @@ var client = new MongoClient(dbURI, {
     }
 });
 const wsServer = https.createServer(app)
-const wss = new WebSocket.Server({ server: wsServer, port: port });
+const wss = new WebSocket.Server({ server: wsServer });
 async function run() {
 
     try {
