@@ -1,0 +1,125 @@
+// let products = [
+//     {
+//         "id": 1,
+//         "name": "ananas",
+//         "author": "typicode223",
+//         "type": "fruits",
+//         "price": 300,
+//         "onStack": true,
+//         "quantity": 0,
+//         "details": "Jako lepo voce i zdravo",
+//         "rating": 4,
+//         "comments": [{
+//             id: 1,
+//             comment: "Ananas je kao dobra, sve preporuke ovde kupiti...",
+//             user: "bojanb106@gmail.com",
+//             rating: 5,
+//         },
+//         {
+//             id: 1,
+//             comment: "nije bas nest",
+//             user: "bojanb106@gmail.com",
+//             rating: 4,
+//         },
+//         {
+//             id: 1,
+//             comment: "nije bas nest",
+//             user: "bojanb106@gmail.com",
+//             rating: 2,
+//         }
+
+
+
+//         ],
+
+//     },
+//     {
+//         "id": 2,
+//         "name": "jabuka11",
+//         "author": "typicode223",
+//         "type": "fruits",
+//         "quantity": 0,
+//         "details": "Jako lepo voce i zdravo, i",
+//         "onStack": true,
+//         "price": 200,
+//         "rating": 3,
+//         "comments": []
+//     },
+
+//     {
+//         "id": 3,
+//         "name": "pomorandza",
+//         "author": "typicode223",
+//         "type": "fruits",
+//         "details": "Jako lepo voce i zdravo, i",
+//         "quantity": 0,
+//         "onStack": true,
+//         "price": 400,
+//         "rating": 5,
+//         "comments": []
+//     },
+//     {
+//         "id": 4,
+//         "name": "kruska",
+//         "author": "typicode223",
+//         "type": "fruits",
+//         "quantity": 0,
+//         "details": "Jako lepo voce i zdravo i dobo za kompot",
+//         "price": 500,
+//         "onStack": true,
+//         "rating": 3,
+//         "comments": []
+//     },
+//     {
+//         "id": 5,
+//         "name": "Lenovo 300",
+//         "author": "typicode223",
+//         "type": "laptops",
+//         "quantity": 0,
+//         "details": "Jako dobar laptop, brz, pouzdan....",
+//         "price": 30000,
+//         "rating": 5,
+//         "onStack": true,
+//         "comments": []
+//     },
+//     {
+//         "id": 6,
+//         "name": "lenovo 2000",
+//         "author": "typicode223",
+//         "type": "laptops",
+//         "details": "Jako dobar laptop, brz, pouzdan i od kvalitetne plastike izradjen....",
+//         "quantity": 0,
+//         "price": 35000,
+//         "onStack": true,
+//         "rating": 4,
+//         "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
+//         "comments": []
+//     },
+
+//     {
+//         "id": 8,
+//         "name": "Lenovo 123",
+//         "author": "typicode223",
+//         "type": "laptops",
+//         "details": "Dobra lubenica",
+//         "quantity": 0,
+//         "price": 35000,
+//         "onStack": true,
+//         "rating": 4,
+//         "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
+//         "comments": []
+//     },
+//     {
+//         "id": 9,
+//         "name": "grasak",
+//         "author": "typicode223",
+//         "type": "vegetables",
+//         "details": "Dobra lubenica",
+//         "quantity": 0,
+//         "price": 35000,
+//         "onStack": true,
+//         "rating": 4,
+//         "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
+//         "comments": []
+//     },
+// ]
