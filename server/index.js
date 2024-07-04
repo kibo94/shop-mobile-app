@@ -47,7 +47,7 @@ var client = new MongoClient(dbURI, {
         deprecationErrors: true,
     }
 });
-const server = new WebSocketServer({ port: port2 });
+const server = new WebSocketServer({ port: port2, });
 async function run() {
 
     try {
@@ -58,6 +58,26 @@ async function run() {
             console.log("Pinged your deployment. You successfully connected to MongoDB!");
             db = cli.db("Products");
             app.listen(port);
+            server.on('connection', (ws) => {
+                let messages = [];
+                console.log("connection established")
+
+                // Listen for messages from the client
+                ws.on('message', (message) => {
+                    const buff = Buffer.from(message, "utf-8");
+                    console.log(buff.toString())
+                    server.clients.forEach((client) => {
+
+                        client.send(buff.toString());
+
+                    });
+                });
+
+                // Handle disconnection
+                ws.on('close', () => {
+                    console.log('Client disconnected');
+                });
+            });
 
             // httpsServer.listen(port, (s) => console.log('port is live', port))
         });
@@ -71,26 +91,6 @@ async function run() {
 
 }
 
-server.on('connection', (ws) => {
-    let messages = [];
-    console.log("connection established")
-
-    // Listen for messages from the client
-    ws.on('message', (message) => {
-        const buff = Buffer.from(message, "utf-8");
-        console.log(buff.toString())
-        server.clients.forEach((client) => {
-
-            client.send(buff.toString());
-
-        });
-    });
-
-    // Handle disconnection
-    ws.on('close', () => {
-        console.log('Client disconnected');
-    });
-});
 
 
 
