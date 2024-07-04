@@ -1,12 +1,23 @@
-import express from "express";
-import fs from "fs"
-import https from "https"
-import http from "http"
-import path from "path";
-import cors from "cors"
-import nodemailer from "nodemailer";
-import { MongoClient, ServerApiVersion } from "mongodb"
-import { WebSocketServer } from "ws"
+// import express from "express";
+// import fs from "fs"
+// import https from "https"
+// import http from "http"
+// import path from "path";
+// import cors from "cors"
+// import nodemailer from "nodemailer";
+// import { MongoClient, ServerApiVersion } from "mongodb"
+// import { WebSocketServer } from "ws"
+// import WebSocket from "ws";
+var express = require("express");
+var fs = require("fs");
+var https = require("https");
+var http = require("http");
+var path = require("path");
+var cors = require("cors");
+var nodemailer = require("nodemailer");
+var { MongoClient, ServerApiVersion } = require("mongodb")
+
+const WebSocket = require('ws');
 
 // import serviceAccount from "path/to/key.json"
 const app = express()
@@ -48,7 +59,8 @@ var client = new MongoClient(dbURI, {
         deprecationErrors: true,
     }
 });
-const wss = new WebSocketServer({ port: port2 });
+const wsServer = https.createServer(app)
+const wss = new WebSocket.Server({ port: port2 });
 async function run() {
 
     try {
@@ -159,7 +171,7 @@ app.post('/createReceipt', (req, res) => {
     text-align: left;
     padding: 8px;">Total</td>
 
-  
+
     <td style=" border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;">${totalPrice} din</td>
@@ -171,7 +183,7 @@ app.post('/createReceipt', (req, res) => {
      ${table}
      <p style="text-align: left;    width: 300px;">Hvala na kupovini i ukazanom poverenju...</p>
     </div>
-    
+
     </div>
     `
     const transporter = nodemailer.createTransport({
@@ -271,7 +283,8 @@ app.post('/comments', (req, res) => {
 
 
 run()
-app.listen(port)
+
+wsServer.listen(port, () => { console.log(`Server run on port ${port}`) })
 
 
 
