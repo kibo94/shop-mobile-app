@@ -2,10 +2,10 @@
   "name": "test_api_node",
   "version": "1.0.0",
   "description": "test api for mobile app",
-  "main": "nodemon ./index.js",
+  "main": "./index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "./index.js"
   },
   "author": "Bojan Bogdanovic",
   "license": "ISC",
