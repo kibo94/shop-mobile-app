@@ -5,10 +5,10 @@
   "main": "./index.js",
   "type": "module",
   "scripts": {
-    "start": "./index.js"
+    "start": "node index.js"
   },
   "author": "Bojan Bogdanovic",
-  "license": "ISC",
+  "license": "ISsC",
   "dependencies": {
     "@google-cloud/storage": "^7.11.2",
     "@sendgrid/mail": "^8.1.3",
