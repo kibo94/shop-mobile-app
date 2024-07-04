@@ -60,7 +60,7 @@ var client = new MongoClient(dbURI, {
     }
 });
 const wsServer = https.createServer(app)
-const wss = new WebSocket.Server({ server: wsServer });
+const wss = new WebSocket.Server({ server: wsServer, port: port });
 async function run() {
 
     try {
@@ -105,7 +105,7 @@ wss.on('connection', (ws) => {
     });
 });
 
-app.post('/register', async (req, res) => {
+wsServer.post('/register', async (req, res) => {
 
     let user = users.find(user => user.email == req.body.email)
     try {
@@ -120,7 +120,7 @@ app.post('/register', async (req, res) => {
         res.status(404).json({ success: false, error: error.message });
     }
 })
-app.post('/createReceipt', (req, res) => {
+wsServer.post('/createReceipt', (req, res) => {
     var products = JSON.parse(req.body.products);
     var email = req.body.email
     var totalPrice = 0;
@@ -212,14 +212,14 @@ app.post('/createReceipt', (req, res) => {
 })
 
 
-app.get('/', async (req, res) => {
+wsServer.get('/', async (req, res) => {
 
     console.log('hi form api')
     res.json({ 'name': "bojan" })
 
 });
 
-app.get('/search', (req, res) => {
+wsServer.get('/search', (req, res) => {
     var text = req.query.text;
     var searchedPrds = products
         .filter(product => product.name.toLocaleLowerCase()
@@ -228,14 +228,14 @@ app.get('/search', (req, res) => {
     res.json(searchedPrds);
 
 })
-app.get('/filters', (req, res) => {
+wsServer.get('/filters', (req, res) => {
     var filters = products.map((product) => product.type)
 
     res.json(filters.filter((item, pos) => filters.indexOf(item) == pos));
 
 })
 
-app.get('/products', async (req, res) => {
+wsServer.get('/products', async (req, res) => {
     console.log('hi form api')
 
     var dbProducts = await db.collection('products').find().toArray();
@@ -243,7 +243,7 @@ app.get('/products', async (req, res) => {
     res.json(dbProducts);
 
 })
-app.post('/login', async (req, res) => {
+wsServer.post('/login', async (req, res) => {
     var dbUsers = await db.collection('users').find().toArray();
     let user = dbUsers.find(user => user.email == req.body.email && user.password == req.body.password)
     try {
@@ -258,12 +258,12 @@ app.post('/login', async (req, res) => {
 })
 
 
-app.put('/filterProducts', (req, res) => {
+wsServer.put('/filterProducts', (req, res) => {
     const prodType = req.body.type.toLowerCase();
     const filteredProducts = prodType == "all" ? products : products.filter(prod => prod.type == prodType);
     res.json(filteredProducts);
 })
-app.post('/comments', (req, res) => {
+wsServer.post('/comments', (req, res) => {
     let id = req.body.id;
     let comment = req.body.comment
     let user = req.body.user
