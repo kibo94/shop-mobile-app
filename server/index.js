@@ -1,3 +1,13 @@
+// import express from "express";
+// import fs from "fs"
+// import https from "https"
+// import http from "http"
+// import path from "path";
+// import cors from "cors"
+// import nodemailer from "nodemailer";
+// import { MongoClient, ServerApiVersion } from "mongodb"
+// import { WebSocketServer } from "ws"
+// import WebSocket from "ws";
 var express = require("express");
 var fs = require("fs");
 var https = require("https");
@@ -50,7 +60,7 @@ var client = new MongoClient(dbURI, {
     }
 });
 const wsServer = https.createServer(app)
-const wss = new WebSocket.Server({ port: port });
+const wss = new WebSocket.Server({ server: wsServer });
 async function run() {
 
     try {
@@ -60,7 +70,6 @@ async function run() {
             cli.db("Products").command({ ping: 1 });
             console.log("Pinged your deployment. You successfully connected to MongoDB!");
             db = cli.db("Products");
-            app.listen(port)
 
             // httpsServer.listen(port, (s) => console.log('port is live', port))
         });
@@ -271,7 +280,7 @@ app.post('/comments', (req, res) => {
 
 
 run()
-
+wsServer.listen(port, () => { console.log(`Server run on port ${port}`) })
 
 
 
