@@ -50,7 +50,7 @@ var client = new MongoClient(dbURI, {
     }
 });
 const wsServer = https.createServer(app)
-const wss = new WebSocket.Server({ port: port2 });
+const wss = new WebSocket.Server({ port: port });
 async function run() {
 
     try {
@@ -61,7 +61,7 @@ async function run() {
             console.log("Pinged your deployment. You successfully connected to MongoDB!");
             db = cli.db("Products");
             app.listen(port)
-            wsServer.listen(port2, () => { console.log(`Server run on port ${port2}`) })
+
             // httpsServer.listen(port, (s) => console.log('port is live', port))
         });
         // Send a ping to confirm a successful connection
