@@ -12,7 +12,7 @@ const app = express()
 
 
 const port = process.env.PORT || 4000;
-const wsport = process.env.PORT || 8080;
+
 let users = [
 
 ]
@@ -32,7 +32,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PATCH', 'PUT']
 }))
 // });
-const server = new WebSocketServer({ port: wsport });
+const server = new WebSocketServer({ port: port });
 const httpsServer = https.createServer({
     key: fs.readFileSync(path.join("cert", "key.pem")),
     cert: fs.readFileSync(path.join("cert", "cert.pem"))
@@ -54,7 +54,7 @@ async function run() {
             cli.db("Products").command({ ping: 1 });
             console.log("Pinged your deployment. You successfully connected to MongoDB!");
             db = cli.db("Products");
-
+            app.listen(port);
             server.on('connection', (ws) => {
                 let messages = [];
 
@@ -75,7 +75,7 @@ async function run() {
                     console.log('Client disconnected');
                 });
             });
-            app.listen(port);
+
             // httpsServer.listen(port, (s) => console.log('port is live', port))
         });
         // Send a ping to confirm a successful connection
