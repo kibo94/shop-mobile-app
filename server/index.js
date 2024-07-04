@@ -1,145 +1,23 @@
-import express, { json } from "express";
+import express from "express";
 import fs from "fs"
 import https from "https"
 import path from "path";
 import cors from "cors"
 import nodemailer from "nodemailer";
 import { MongoClient, ServerApiVersion } from "mongodb"
+import { WebSocketServer } from "ws"
 
 // import serviceAccount from "path/to/key.json"
 const app = express()
 
 
 const port = process.env.PORT || 4000;
+const wsport = process.env.PORT || 8080;
 let users = [
 
 ]
 let products = [];
-// let products = [
-//     {
-//         "id": 1,
-//         "name": "ananas",
-//         "author": "typicode223",
-//         "type": "fruits",
-//         "price": 300,
-//         "onStack": true,
-//         "quantity": 0,
-//         "details": "Jako lepo voce i zdravo",
-//         "rating": 4,
-//         "comments": [{
-//             id: 1,
-//             comment: "Ananas je kao dobra, sve preporuke ovde kupiti...",
-//             user: "bojanb106@gmail.com",
-//             rating: 5,
-//         },
-//         {
-//             id: 1,
-//             comment: "nije bas nest",
-//             user: "bojanb106@gmail.com",
-//             rating: 4,
-//         },
-//         {
-//             id: 1,
-//             comment: "nije bas nest",
-//             user: "bojanb106@gmail.com",
-//             rating: 2,
-//         }
 
-
-
-//         ],
-
-//     },
-//     {
-//         "id": 2,
-//         "name": "jabuka11",
-//         "author": "typicode223",
-//         "type": "fruits",
-//         "quantity": 0,
-//         "details": "Jako lepo voce i zdravo, i",
-//         "onStack": true,
-//         "price": 200,
-//         "rating": 3,
-//         "comments": []
-//     },
-
-//     {
-//         "id": 3,
-//         "name": "pomorandza",
-//         "author": "typicode223",
-//         "type": "fruits",
-//         "details": "Jako lepo voce i zdravo, i",
-//         "quantity": 0,
-//         "onStack": true,
-//         "price": 400,
-//         "rating": 5,
-//         "comments": []
-//     },
-//     {
-//         "id": 4,
-//         "name": "kruska",
-//         "author": "typicode223",
-//         "type": "fruits",
-//         "quantity": 0,
-//         "details": "Jako lepo voce i zdravo i dobo za kompot",
-//         "price": 500,
-//         "onStack": true,
-//         "rating": 3,
-//         "comments": []
-//     },
-//     {
-//         "id": 5,
-//         "name": "Lenovo 300",
-//         "author": "typicode223",
-//         "type": "laptops",
-//         "quantity": 0,
-//         "details": "Jako dobar laptop, brz, pouzdan....",
-//         "price": 30000,
-//         "rating": 5,
-//         "onStack": true,
-//         "comments": []
-//     },
-//     {
-//         "id": 6,
-//         "name": "lenovo 2000",
-//         "author": "typicode223",
-//         "type": "laptops",
-//         "details": "Jako dobar laptop, brz, pouzdan i od kvalitetne plastike izradjen....",
-//         "quantity": 0,
-//         "price": 35000,
-//         "onStack": true,
-//         "rating": 4,
-//         "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
-//         "comments": []
-//     },
-
-//     {
-//         "id": 8,
-//         "name": "Lenovo 123",
-//         "author": "typicode223",
-//         "type": "laptops",
-//         "details": "Dobra lubenica",
-//         "quantity": 0,
-//         "price": 35000,
-//         "onStack": true,
-//         "rating": 4,
-//         "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
-//         "comments": []
-//     },
-//     {
-//         "id": 9,
-//         "name": "grasak",
-//         "author": "typicode223",
-//         "type": "vegetables",
-//         "details": "Dobra lubenica",
-//         "quantity": 0,
-//         "price": 35000,
-//         "onStack": true,
-//         "rating": 4,
-//         "imgUrl": "https://m.media-amazon.com/images/I/61Qe0euJJZL.jpg",
-//         "comments": []
-//     },
-// ]
 
 var dbURI = "mongodb+srv://bojan947:Bojan947@bogishop.jnzb5zx.mongodb.net/?retryWrites=true&w=majority&appName=bogiShop"
 var client;
@@ -154,7 +32,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PATCH', 'PUT']
 }))
 // });
-
+const server = new WebSocketServer({ port: wsport });
 const httpsServer = https.createServer({
     key: fs.readFileSync(path.join("cert", "key.pem")),
     cert: fs.readFileSync(path.join("cert", "cert.pem"))
@@ -177,6 +55,27 @@ async function run() {
             console.log("Pinged your deployment. You successfully connected to MongoDB!");
             db = cli.db("Products");
             app.listen(port);
+            server.on('connection', (ws) => {
+                let messages = [];
+
+
+                // Listen for messages from the client
+                ws.on('message', (message) => {
+                    const buff = Buffer.from(message, "utf-8");
+                    console.log(buff.toString())
+                    server.clients.forEach((client) => {
+
+                        client.send(buff.toString());
+
+                    });
+                });
+
+                // Handle disconnection
+                ws.on('close', () => {
+                    console.log('Client disconnected');
+                });
+            });
+
             // httpsServer.listen(port, (s) => console.log('port is live', port))
         });
         // Send a ping to confirm a successful connection
@@ -190,7 +89,7 @@ async function run() {
 }
 
 
-run()
+
 
 app.post('/register', async (req, res) => {
 
@@ -199,11 +98,7 @@ app.post('/register', async (req, res) => {
         if (user) throw new Error('User  exists');
         var { email, password, fullName, city, address, phone } = req.body;
         await db.collection("users").insertOne({ email, password, fullName, city, address, phone })
-
         res.json(200)
-
-
-
 
     } catch (error) {
         console.log("catch triggereddd")
@@ -296,7 +191,7 @@ app.post('/createReceipt', (req, res) => {
 
         console.log("Message sent: %s", info.messageId);
 
-        // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
+
     }
     res.status(200).json({ msg: "Receipt has been created" });
     main().catch(console.error);
@@ -326,9 +221,12 @@ app.get('/filters', (req, res) => {
 
 })
 
-app.get('/products', (req, res) => {
+app.get('/products', async (req, res) => {
     console.log('hi form api')
-    res.json(products);
+
+    var dbProducts = await db.collection('products').find().toArray();
+
+    res.json(dbProducts);
 
 })
 app.post('/login', async (req, res) => {
@@ -365,3 +263,10 @@ app.post('/comments', (req, res) => {
     res.json(products);
 
 })
+
+
+run()
+
+
+
+
