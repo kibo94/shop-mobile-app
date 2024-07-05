@@ -60,7 +60,7 @@ const httpsServer = https.createServer({
     key: fs.readFileSync(path.join("cert", "key.pem")),
     cert: fs.readFileSync(path.join("cert", "cert.pem"))
 }, app);
-const wsServer = https.createServer(app)
+const wsServer = http.createServer(app)
 const wss = new WebSocket.Server({ server: wsServer });
 client.connect().then((cli) => {
     cli.db("Products").command({ ping: 1 });
