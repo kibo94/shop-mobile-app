@@ -31,7 +31,7 @@ let users = [
 
 ]
 let products = [];
-
+let messages = [{ text: "Welcome to group chat", timestamp: new Date() }]
 
 var dbURI = "mongodb+srv://bojan947:Bojan947@bogishop.jnzb5zx.mongodb.net/?retryWrites=true&w=majority&appName=bogiShop"
 var client;
@@ -47,10 +47,7 @@ app.use(cors({
 }))
 // });
 // const server = new WebSocketServer({ port: port });
-const httpsServer = https.createServer({
-    key: fs.readFileSync(path.join("cert", "key.pem")),
-    cert: fs.readFileSync(path.join("cert", "cert.pem"))
-}, app);
+
 var client = new MongoClient(dbURI, {
 
     serverApi: {
@@ -59,37 +56,23 @@ var client = new MongoClient(dbURI, {
         deprecationErrors: true,
     }
 });
-const wsServer = http.createServer(app)
+const httpsServer = https.createServer({
+    key: fs.readFileSync(path.join("cert", "key.pem")),
+    cert: fs.readFileSync(path.join("cert", "cert.pem"))
+}, app);
+const wsServer = https.createServer(app)
 const wss = new WebSocket.Server({ server: wsServer });
 client.connect().then((cli) => {
     cli.db("Products").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
     db = cli.db("Products");
 
+
     // httpsServer.listen(port, (s) => console.log('port is live', port))
 }).catch((err) => console.log(err));
 
 
-wss.on('connection', (ws) => {
-    let messages = [];
-    console.log("connection established")
 
-    // Listen for messages from the client
-    ws.on('message', (message) => {
-        const buff = Buffer.from(message, "utf-8");
-        console.log(buff.toString())
-        wss.clients.forEach((client) => {
-
-            ws.send(buff.toString());
-
-        });
-    });
-
-    // Handle disconnection
-    ws.on('close', () => {
-        console.log('Client disconnected');
-    });
-});
 
 app.post('/register', async (req, res) => {
 
@@ -263,10 +246,59 @@ app.post('/comments', (req, res) => {
     res.json(products);
 
 })
+wss.on('connection', (ws) => {
+    console.log("connection established")
+    ws.send(JSON.stringify({ type: 'initial', data: messages }));
+    // Listen for messages from the client
+
+    ws.on('message', (message) => {
+        const buff = Buffer.from(message, "utf-8");
+        console.log(buff.toString())
+        const messageData = { text: buff.toString(), timestamp: new Date() };
+        wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({ type: 'new', data: messageData }));
+            }
+        });
+    });
+
+    // Handle disconnection
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
+});
 
 
+app.post('/messages', async (req, res) => {
+    const messageData = { text: req.body.text, timestamp: new Date() };
+    messages.push(messageData)
+    console.log(messageData)
+    try {
 
-wsServer.listen(port, () => { console.log(`Server run on port ${port}`) })
+
+        // Broadcast the new message to all WebSocket clients
+        wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({ type: 'new', data: messageData }));
+            }
+        });
+
+        res.status(201).json(result.ops[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to create message' });
+    }
+});
+app.get('/messages', async (req, res) => {
+    try {
+
+        res.json(messages);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch messages' });
+    }
+});
+
+
+wsServer.listen(port, () => { console.log("Server connect on port " + port) })
 
 
 

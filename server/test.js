@@ -1,23 +1,37 @@
-import express from "express";
-import fs from "fs"
-import https from "https"
-import path from "path";
-import cors from "cors"
-import nodemailer from "nodemailer";
-import { MongoClient, ServerApiVersion } from "mongodb"
-import { WebSocketServer } from "ws"
+// import express from "express";
+// import fs from "fs"
+// import https from "https"
+// import http from "http"
+// import path from "path";
+// import cors from "cors"
+// import nodemailer from "nodemailer";
+// import { MongoClient, ServerApiVersion } from "mongodb"
+// import { WebSocketServer } from "ws"
+// import WebSocket from "ws";
+var express = require("express");
+var fs = require("fs");
+var https = require("https");
+var http = require("http");
+var path = require("path");
+var cors = require("cors");
+var nodemailer = require("nodemailer");
+var { MongoClient, ServerApiVersion } = require("mongodb")
+
+const WebSocket = require('ws');
 
 // import serviceAccount from "path/to/key.json"
 const app = express()
 
 
 const port = process.env.PORT || 4000;
-const wsport = process.env.PORT || 8080;
+const port2 = process.env.PORT2 || 8081;
+
+
 let users = [
 
 ]
 let products = [];
-
+let messages = [{ text: "Welcome to group chat", timestamp: new Date() }]
 
 var dbURI = "mongodb+srv://bojan947:Bojan947@bogishop.jnzb5zx.mongodb.net/?retryWrites=true&w=majority&appName=bogiShop"
 var client;
@@ -32,7 +46,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PATCH', 'PUT']
 }))
 // });
-const server = new WebSocketServer({ port: wsport });
+// const server = new WebSocketServer({ port: port });
 const httpsServer = https.createServer({
     key: fs.readFileSync(path.join("cert", "key.pem")),
     cert: fs.readFileSync(path.join("cert", "cert.pem"))
@@ -45,48 +59,15 @@ var client = new MongoClient(dbURI, {
         deprecationErrors: true,
     }
 });
-async function run() {
-
-    try {
-        // Connect the client to the server	(optional starting in v4.7)
-
-        client.connect().then((cli) => {
-            cli.db("Products").command({ ping: 1 });
-            console.log("Pinged your deployment. You successfully connected to MongoDB!");
-            db = cli.db("Products");
-            // app.listen(port);
-            // server.on('connection', (ws) => {
-            //     let messages = [];
-
-
-            //     // Listen for messages from the client
-            //     ws.on('message', (message) => {
-            //         const buff = Buffer.from(message, "utf-8");
-            //         console.log(buff.toString())
-            //         server.clients.forEach((client) => {
-
-            //             client.send(buff.toString());
-
-            //         });
-            //     });
-
-            //     // Handle disconnection
-            //     ws.on('close', () => {
-            //         console.log('Client disconnected');
-            //     });
-            // });
-            app.listen(port)
-            // httpsServer.listen(port, (s) => console.log('port is live', port))
-        });
-        // Send a ping to confirm a successful connection
-
-
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-    }
-
-}
+const wsServer = https.createServer(app)
+const wss = new WebSocket.Server({ server: wsServer });
+client.connect().then((cli) => {
+    cli.db("Products").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    db = cli.db("Products");
+    wsServer.listen(port, () => { console.log(`Server run on port ${port}`) })
+    // httpsServer.listen(port, (s) => console.log('port is live', port))
+}).catch((err) => console.log(err));
 
 
 
@@ -154,7 +135,7 @@ app.post('/createReceipt', (req, res) => {
     text-align: left;
     padding: 8px;">Total</td>
 
-  
+
     <td style=" border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;">${totalPrice} din</td>
@@ -166,7 +147,7 @@ app.post('/createReceipt', (req, res) => {
      ${table}
      <p style="text-align: left;    width: 300px;">Hvala na kupovini i ukazanom poverenju...</p>
     </div>
-    
+
     </div>
     `
     const transporter = nodemailer.createTransport({
@@ -263,9 +244,61 @@ app.post('/comments', (req, res) => {
     res.json(products);
 
 })
+wss.on('connection', (ws) => {
+    console.log("connection established")
+    ws.send(JSON.stringify({ type: 'initial', data: messages }));
+    // Listen for messages from the client
+
+    ws.on('message', (message) => {
+        const buff = Buffer.from(message, "utf-8");
+        console.log(buff.toString())
+        const messageData = { text: buff.toString(), timestamp: new Date() };
+        wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({ type: 'new', data: messageData }));
+            }
+        });
+    });
+
+    // Handle disconnection
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
+});
 
 
-run()
+app.post('/messages', async (req, res) => {
+
+    const messageData = { text: req.body.text, timestamp: new Date() };
+    messages.push(messageData)
+    try {
+
+        console.log(wss.clients)
+        // Broadcast the new message to all WebSocket clients
+        wss.clients.forEach((client) => {
+
+            if (client.readyState === WebSocket.OPEN) {
+                console.log("message sent")
+                client.send(JSON.stringify({ type: 'new', data: messageData }));
+            }
+        });
+
+        res.status(201).json(result.ops[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to create message' });
+    }
+});
+app.get('/messages', async (req, res) => {
+    try {
+
+        res.json(messages);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch messages' });
+    }
+});
+
+
+
 
 
 
